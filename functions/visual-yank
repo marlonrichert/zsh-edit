@@ -1,0 +1,26 @@
+#!/bin/zsh
+
+visual-yank() {
+  setopt $_edit_opts
+
+  local -aU kills=( "$CUTBUFFER" $killring[@] )
+  shift kills
+  killring=( $kills[@] "${(s:.:@)${(l:$(($#killring - $#kills - 1))::.:):-}}" )
+  zle -R
+
+  if [[ $WIDGET == reverse-* ]]; then
+    local -i i; for (( i=1; i <= $#kills; i++ )); do
+      zle .${WIDGET#reverse-}
+    done
+  else
+    zle .$WIDGET
+  fi
+
+  zle -f yank
+  zle _show_clipboard
+}
+
+autoload -Uz _show_clipboard
+zle -C _show_clipboard list-choices _show_clipboard
+
+visual-yank "$@"
