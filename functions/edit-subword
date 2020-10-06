@@ -1,25 +1,13 @@
 #!/bin/zsh
 setopt $_edit_opts
 
-local curcontext="${curcontext:-:zle:$WIDGET}"
-zstyle -t $curcontext skip-whitespace-first &&
-  local space='[[:space:]]#'
-local -i step; zstyle -s $curcontext skip-chars step ||
-  step=2
-local skip="?(#c,$step)"
-local WORDCHARS; zstyle -s $curcontext word-chars WORDCHARS ||
-  WORDCHARS='*?'
-local word; zstyle -s $curcontext word-class word ||
-  word='[:WORD:]'
-local wordhead; zstyle -s $curcontext subword-range wordhead ||
-  wordhead='[:upper:]'
-local subword="([^$~word]##|[$~wordhead]#([$~word]~[$~wordhead])#)"
+local subword="([[:WORD:]]##~*[[:lower:]]*[[:upper:]]*)"
+local nonword='[^[:WORD:]]#'
 
-local match
 if [[ $WIDGET == *backward-* ]]; then
-  (( MARK = CURSOR - ${(M)#LBUFFER%%$~subword$~skip$~space} ))
+  (( MARK = CURSOR - ${(M)#LBUFFER%%$~subword$~nonword} ))
 else
-  (( MARK = CURSOR + ${(M)#RBUFFER##$~space$~skip$~subword} ))
+  (( MARK = CURSOR + ${(M)#RBUFFER##$~nonword$~subword} ))
 fi
 
 (( MARK != CURSOR ))
