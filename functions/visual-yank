@@ -3,21 +3,25 @@
 visual-yank() {
   setopt $_edit_opts
 
-  local -aU kills=( "$CUTBUFFER" $killring[@] )
-  shift kills
-  killring=( $kills[@] "${(s:.:@)${(l:$(($#killring - $#kills - 1))::.:):-}}" )
-  zle -R
+  local -i len=$#killring[@]
+  {
+    local -aU kills=( "$CUTBUFFER" $killring[@] )
+    shift kills
+    killring=( $kills[@] )
 
-  if [[ $WIDGET == reverse-* ]]; then
-    local -i i; for (( i=1; i <= $#kills; i++ )); do
-      zle .${WIDGET#reverse-}
-    done
-  else
-    zle .$WIDGET
-  fi
+    if [[ $WIDGET == reverse-* ]]; then
+      local -i i; for (( i=1; i <= $#kills; i++ )); do
+        zle .${WIDGET#reverse-}
+      done
+    else
+      zle .$WIDGET
+    fi
 
-  zle -f yank
-  zle _show_clipboard
+    zle -f yank
+    zle _show_clipboard
+  } always {
+    killring+=( "${(s:.:@)${(r:$((len - $#killring[@] - 1))::.:):-}}" )
+  }
 }
 
 autoload -Uz _show_clipboard
