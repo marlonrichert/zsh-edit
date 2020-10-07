@@ -25,7 +25,7 @@ compadd -M 'r:[^[:upper:]0-9]||[[:upper:]0-9]=** r:|=*' LikeTHIS FooHoo foo123 b
 
 Thus, when your cursor is inside a word, you can press <kbd>forward-word</kbd> or
 <kbd>backward-word</kbd> to reach either end of the word. Likewise, when you have your cursor at
-the either end of a word, pressing <kbd>kill-word</kbd> or <kbd>backward-kill-word</kbd> in the
+either end of a word, pressing <kbd>kill-word</kbd> or <kbd>backward-kill-word</kbd> in the
 direction of the word will always kill the whole word and nothing but the whole word.
 
 Also note that subwords are now treated as separate words, too: `LikeTHIS` is parsed as two words,
@@ -39,7 +39,7 @@ show you which kill is currently selected, making it easier to cycle to the righ
 To view your clipboard at any time, without modifying your command line, just press
 <kbd>yank-pop</kbd>.
 
-In addition, whenever you perform a <kbd>yank</kbd>, `zsh-edit` eliminates all duplicates kills
+In addition, whenever you perform a <kbd>yank</kbd>, `zsh-edit` eliminates all duplicate kills
 from your kill ring. Thus, each entry listed is guaranteed to be unique.
 
 ## Reverse Yank-Pop
