@@ -6,7 +6,7 @@ _show_clipboard() {
   export ZLS_COLORS="=${(b)BUFFER[YANK_START+1,YANK_END]}=$color[bold]"
 
   local displ=( "$CUTBUFFER" $killring[@] )
-  compadd -V kill-ring -QU -ld displ - $CUTBUFFER ${killring[@]}
+  compadd -V kill-ring -QU -ld displ - $CUTBUFFER $killring[@]
 
   compstate[insert]=''
   compstate[list]='list force'

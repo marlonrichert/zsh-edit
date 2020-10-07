@@ -4,14 +4,15 @@ visual-yank() {
   setopt $_edit_opts
 
   local -i len=$#killring[@]
+  local -aU kills=( "$CUTBUFFER" $killring[@] )
+  shift kills
   {
-    local -aU kills=( "$CUTBUFFER" $killring[@] )
-    shift kills
     killring=( $kills[@] )
 
     if [[ $WIDGET == reverse-* ]]; then
-      local -i i; for (( i=1; i <= $#kills; i++ )); do
-        zle .${WIDGET#reverse-}
+      local widget=.${WIDGET#reverse-}
+      local -i i; for (( i = 0; i < $#kills[@]; i++ )); do
+        zle $widget
       done
     else
       zle .$WIDGET
