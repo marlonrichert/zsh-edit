@@ -3,8 +3,6 @@
 _show_clipboard() {
   setopt $_edit_opts
 
-  export ZLS_COLORS="=${(b)BUFFER[YANK_START+1,YANK_END]}=$color[bold]"
-
   local displ=( "$CUTBUFFER" $killring[@] )
   compadd -V kill-ring -QU -ld displ - $CUTBUFFER $killring[@]
 
@@ -16,7 +14,5 @@ _show_clipboard() {
 
 setopt $_edit_opts
 zmodload zsh/complist
-autoload -Uz colors
-colors
 
 _show_clipboard "$@"

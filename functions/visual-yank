@@ -19,6 +19,8 @@ visual-yank() {
     fi
 
     zle -f yank
+
+    export ZLS_COLORS="=${(b)BUFFER[YANK_START+1,YANK_END]}=07"
     zle _show_clipboard
   } always {
     killring+=( "${(s:.:@)${(r:$((len - $#killring[@] - 1))::.:):-}}" )
