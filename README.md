@@ -9,27 +9,54 @@
 * [License](#license)
 
 ## Better Word Matching
-`zsh-edit` augments
+By default, Zsh's widgets
 * <kbd>forward-word</kbd>,
 * <kbd>backward-word</kbd>,
 * <kbd>kill-word</kbd> and
 * <kbd>backward-kill-word</kbd>
 
-to behave as follows (assuming, for this example, that you have `WORDCHARS='*?\'` in your
-`~/.zshrc` file), with `⇥` and `⇤` marking forward and backward stops, respectively:
-```
-      ⇥  ⇥  ⇥         ⇥  ⇥ ⇥          ⇥  ⇥ ⇥   ⇥ ⇥   ⇥     ⇥   ⇥   ⇥  ⇥      ⇥      ⇥
-compadd -M 'r:[^[:upper:]0-9]||[[:upper:]0-9]=** r:|=*' LikeTHIS FooHoo foo123 bar234
-⇤        ⇤  ⇤     ⇤      ⇤ ⇤      ⇤      ⇤ ⇤  ⇤  ⇤   ⇤  ⇤   ⇤    ⇤  ⇤   ⇤      ⇤
+always move to the beginning of the next word and do not recognize subwords (for example, `dev` and
+`Build` in `devBuild`). This often causes them to move or delete too much, especially in the
+`forward` direction.
+
+`zsh-edit` upgrades these widgets to add subword parsing and makes it so that movement in either
+direction stops at the next word boundary, regardless whether that's the beginning or end of a
+word. For example, with `WORDCHARS=''`, you now get the following behavior:
+
+```zsh
+       >  > >      >   >    >        >  >
+shutdown.sh; gradlew devBuild; startup.sh
+<        < < <       <  <      <       <
 ```
 
-Thus, when your cursor is inside a word, you can press <kbd>forward-word</kbd> or
-<kbd>backward-word</kbd> to reach either end of the word. Likewise, when you have your cursor at
-either end of a word, pressing <kbd>kill-word</kbd> or <kbd>backward-kill-word</kbd> in the
-direction of the word will always kill the whole word and nothing but the whole word.
+This has the following benefits:
+* When your cursor is inside a word, you can now press <kbd>forward-word</kbd> or
+  <kbd>backward-word</kbd> to reach either end of the word.
+* When you have your cursor at either end of a word, pressing <kbd>kill-word</kbd> or
+  <kbd>backward-kill-word</kbd> in the direction of the word will always kill the whole word and
+  nothing else.
+* You are now less likely to delete things you didn't want to delete.
+* Subwords are now recognized and `devBuild` is parsed as two words, `dev` and `Build`, with the
+  cursor stopping at the end of each.
 
-Also note that subwords are now treated as separate words, too: `LikeTHIS` is parsed as two words,
-`Like` and `THIS`.
+### Customization
+Subword matching can be customized by adding characters to `$WORDCHARS`. Any such character will be
+parsed as starting a subword and the cursor will end up to the left of it. For example, with
+`WORDCHARS=' .'`, the behavior above will change to be as follows:
+
+```zsh
+       >  >        >   >    >        >  >
+shutdown.sh; gradlew devBuild; startup.sh
+<       <   <       <   <     <       <
+```
+
+Personally, I use `WORDCHARS='%\*?-_.'`, which behaves like this:
+
+```zsh
+       >  >        >   >    >        >  >
+shutdown.sh; gradlew devBuild; startup.sh
+<       <  < <       <  <    < <      <
+```
 
 ## Clipboard Viewer
 Whenever you <kbd>yank</kbd>, `zsh-edit` will list the contents of your kill ring (including the
