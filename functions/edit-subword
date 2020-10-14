@@ -4,6 +4,7 @@ setopt $_edit_opts
 local subword="([[:WORD:]]##~*[[:lower:]]*[[:upper:]]*)"
 local nonword='[^[:WORD:]]#'
 
+local +h -i MARK
 if [[ $WIDGET == *backward-* ]]; then
   (( MARK = CURSOR - ${(M)#LBUFFER%%$~subword$~nonword} ))
 else
@@ -19,6 +20,5 @@ if [[ $WIDGET == *kill-* ]]; then
 else
   (( CURSOR = MARK ))
 fi
-unset MARK
 
 return ret
