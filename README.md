@@ -1,12 +1,28 @@
 # zsh-edit
-`zsh-edit` is a small, but handy set of editing tools for the Zsh command line.
+`zsh-edit` enhances Zsh's command line editing tools to be more powerful & user-friendly.
 
-* [Better Word Matching](#better-word-matching)
 * [Clipboard Viewer](#clipboard-viewer)
 * [Reverse Yank-Pop](#reverse-yank-pop)
+* [Better Word Matching](#better-word-matching)
 * [Note About Key Bindings](#note-about-key-bindings)
 * [Author](#author)
 * [License](#license)
+
+## Clipboard Viewer
+Whenever you <kbd>yank</kbd>, `zsh-edit` will list the contents of your kill ring (including the
+cut buffer) below your command line. Moreover, when you use <kbd>yank-pop</kbd>, `zsh-edit` will
+show you which kill is currently selected, making it easier to cycle to the right one.
+
+To view your clipboard at any time, without modifying your command line, just press
+<kbd>yank-pop</kbd>.
+
+In addition, whenever you perform a <kbd>yank</kbd>, `zsh-edit` eliminates all duplicate kills
+from your kill ring. Thus, each entry listed is guaranteed to be unique.
+
+## Reverse Yank-Pop
+`zsh-edit` adds a new widget <kbd>reverse-yank-pop</kbd> and binds it to
+<kbd>Alt</kbd><kbd>Shift</kbd><kbd>Y</kbd>. It functions just like <kbd>yank-pop</kbd>, but lets
+you cycle in the opposite direction.
 
 ## Better Word Matching
 By default, Zsh's widgets
@@ -21,7 +37,15 @@ always move to the beginning of the next word and do not recognize subwords (for
 
 `zsh-edit` upgrades these widgets to add subword parsing and makes it so that movement in either
 direction stops at the next word boundary, regardless whether that's the beginning or end of a
-word. For example, with `WORDCHARS=''`, you now get the following behavior:
+word. Assuming otherwise default settings, you will now get this behavior:
+
+```zsh
+       >  > >      >   >    >        >  >
+shutdown.sh; gradlew devBuild; startup.sh
+<       <  < <       <  <      <      <
+```
+
+Or if you have `WORDCHARS=''`, you'll get this instead:
 
 ```zsh
        >  > >      >   >    >        >  >
@@ -39,40 +63,10 @@ This has the following benefits:
 * Subwords are now recognized and `devBuild` is parsed as two words, `dev` and `Build`, with the
   cursor stopping at the end of each.
 
-### Customization
-Subword matching can be customized by adding characters to `$WORDCHARS`. Any such character will be
-parsed as starting a subword and the cursor will end up to the left of it. For example, with
-`WORDCHARS=' .'`, the behavior above will change to be as follows:
-
-```zsh
-       >  >        >   >    >        >  >
-shutdown.sh; gradlew devBuild; startup.sh
-<       <   <       <   <     <       <
-```
-
-Personally, I use `WORDCHARS='%\*?-_.'`, which behaves like this:
-
-```zsh
-       >  >        >   >    >        >  >
-shutdown.sh; gradlew devBuild; startup.sh
-<       <  < <       <  <    < <      <
-```
-
-## Clipboard Viewer
-Whenever you <kbd>yank</kbd>, `zsh-edit` will list the contents of your kill ring (including the
-cut buffer) below your command line. Moreover, when you use <kbd>yank-pop</kbd>, `zsh-edit` will
-show you which kill is currently selected, making it easier to cycle to the right one.
-
-To view your clipboard at any time, without modifying your command line, just press
-<kbd>yank-pop</kbd>.
-
-In addition, whenever you perform a <kbd>yank</kbd>, `zsh-edit` eliminates all duplicate kills
-from your kill ring. Thus, each entry listed is guaranteed to be unique.
-
-## Reverse Yank-Pop
-`zsh-edit` adds a new widget <kbd>reverse-yank-pop</kbd> and binds it to
-<kbd>Alt</kbd><kbd>Shift</kbd><kbd>Y</kbd>. It functions just like <kbd>yank-pop</kbd>, but lets
-you cycle in the opposite direction.
+Subword matching can be customized by adding or removing characters from `$WORDCHARS`: Besides
+uppercase letters, any character in `$WORDCHARS` will be parsed parsed as starting a subword and
+the cursor will end up to the left of it. So, for example, if you want the cursor to always end up
+to the left of any adjacent spaces, just add a space to `$WORDCHARS`.
 
 ## Note About Key Bindings
 Except for the addtion of [<kbd>reverse-yank-pop</kbd>](#reverse-yank-pop), `zsh-edit` does not
