@@ -1,0 +1,8 @@
+#!/bin/zsh
+
+cdpath=()
+local dir=$PWD:h
+while (( ${#${(D)dir}} > 1 )); do
+  cdpath+=( $dir )
+  dir=$dir:h
+done

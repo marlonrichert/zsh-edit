@@ -1,12 +1,32 @@
 # zsh-edit
-`zsh-edit` enhances Zsh's command line editing tools to be more powerful & user-friendly.
+`zsh-edit` enhances Zsh's command line tools to be more powerful & user-friendly.
 
+* [`cd` to Ancestors and Siblings](#cd-to-ancestors-and-siblings)
 * [Clipboard Viewer](#clipboard-viewer)
 * [Reverse Yank-Pop](#reverse-yank-pop)
 * [Better Word Matching](#better-word-matching)
 * [Note About Key Bindings](#note-about-key-bindings)
 * [Author](#author)
 * [License](#license)
+
+## `cd` to Ancestors and Siblings
+Everyone knows that `..` takes you to the parent of the present working dir, but if you want to go
+up more than one level, typing it multiple times can get a bit tedious.
+
+`zsh-edit` makes that easier. From now on, when you use `cd`, you can type the name of any ancestor
+dir and it will take you straight to it. What's more, this also works for sibling dirs,
+too—including siblings of ancestors! To top it off, Zsh will now also complete these dirs for you.
+
+For example, if you're in `/Users/marlon/.zsh/prezto/modules/history-substring-search/external`,
+then
+* `cd prezto` takes you straight to `/Users/marlon/.zsh/prezto`.
+* `cd fasd` takes you straight to `/Users/marlon/.zsh/prezto/modules/fasd`
+
+To make sure this always saves you from typing at least 2 characters, and to reduce the number of
+false positives, if you're in a descendant of named dir, such as `~`, then direct children of this
+dir are not included. Likewise, direct children of `/` are never included either. So, for the
+example above, if you want to go to `/Users/marlon/.zsh`, you'll have to type `cd ~/.zsh`.
+Likewise, if you want to go to `/Users`, you'll have to type `cd /Users`.
 
 ## Clipboard Viewer
 Whenever you <kbd>yank</kbd>, `zsh-edit` will list the contents of your kill ring (including the
