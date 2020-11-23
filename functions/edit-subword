@@ -14,11 +14,17 @@ fi
 (( MARK != CURSOR ))
 local -i ret=$?
 
-if [[ $WIDGET == *kill-* ]]; then
-  zle .kill-region
-  zle -f kill
-else
-  (( CURSOR = MARK ))
-fi
+case $WIDGET in
+  *kill-*)
+    zle .kill-region
+    zle -f kill
+    ;;
+  *backward-*)
+    zle .backward-char -n $(( CURSOR - MARK ))
+    ;;
+  *)
+    zle .forward-char -n $(( MARK - CURSOR ))
+    ;;
+esac
 
 return ret
