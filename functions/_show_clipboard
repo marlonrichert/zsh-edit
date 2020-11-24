@@ -12,7 +12,6 @@ _show_clipboard() {
   (( compstate[nmatches] > 0 ))
 }
 
-setopt $_edit_opts
 zmodload zsh/complist
 
 _show_clipboard "$@"

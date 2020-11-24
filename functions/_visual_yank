@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-visual-yank() {
+_visual_yank() {
   setopt $_edit_opts
 
   local -i len=$#killring[@]
@@ -30,4 +30,4 @@ visual-yank() {
 autoload -Uz _show_clipboard
 zle -C _show_clipboard list-choices _show_clipboard
 
-visual-yank "$@"
+_visual_yank "$@"
