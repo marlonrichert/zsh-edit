@@ -6,7 +6,7 @@
 
   local fdir=${${(%):-%x}:A:h}/functions
   typeset -gU FPATH fpath=( $fdir $fpath )
-  autoload -Uz add-zsh-hook $fdir/*
+  autoload -Uz add-zsh-hook $fdir/*~*.zwc
 
   add-zsh-hook chpwd _cdpath
 
