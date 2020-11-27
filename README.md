@@ -1,13 +1,28 @@
 # zsh-edit
 `zsh-edit` enhances Zsh's command line tools to be more powerful & user-friendly.
 
-* [`cd` to Ancestors and Siblings](#cd-to-ancestors-and-siblings)
 * [Clipboard Viewer](#clipboard-viewer)
-* [Reverse Yank-Pop](#reverse-yank-pop)
-* [Better Word Matching](#better-word-matching)
+* [`reverse-yank-pop`](#reverse-yank-pop)
+* [`cd` to Ancestors and Siblings](#cd-to-ancestors-and-siblings)
+* [Better `backward/forward-(kill-)word` Widgets with Subword
+  Matching](#better-backwardforward-kill-word-widgets-with-subword-matching)
 * [Note About Key Bindings](#note-about-key-bindings)
 * [Author](#author)
 * [License](#license)
+
+## Clipboard Viewer
+Whenever you <kbd>yank</kbd>, `zsh-edit` will list the contents of your kill ring (including the
+cut buffer) below your command line. In addition, `zsh-edit` also eliminates all duplicate kills
+from your kill ring. Thus, each entry listed is guaranteed to be unique.
+
+Furthermore, when you use <kbd>yank-pop</kbd>, `zsh-edit` will show you which kill is currently
+selected, making it easier to cycle to the right one. Finally, to view your clipboard at any time,
+without modifying your command line, just press <kbd>yank-pop</kbd> by itself.
+
+## `reverse-yank-pop`
+`zsh-edit` adds a new widget <kbd>reverse-yank-pop</kbd> and binds it to
+<kbd>Alt</kbd><kbd>Shift</kbd><kbd>Y</kbd>. It functions just like <kbd>yank-pop</kbd>, but lets
+you cycle in the opposite direction.
 
 ## `cd` to Ancestors and Siblings
 Everyone knows that `..` takes you to the parent of the present working dir, but if you want to go
@@ -23,28 +38,12 @@ then
 * `cd fasd` takes you straight to `/Users/marlon/.zsh/prezto/modules/fasd`
 
 To make sure this always saves you from typing at least 2 characters, and to reduce the number of
-false positives, if you're in a descendant of named dir, such as `~`, then direct children of this
-dir are not included. Likewise, direct children of `/` are never included either. So, for the
+false positives, if you're in a descendant of a named dir, such as `~`, then this dir and its
+children are not included. Likewise, `/` and its children are never included either. So, for the
 example above, if you want to go to `/Users/marlon/.zsh`, you'll have to type `cd ~/.zsh`.
 Likewise, if you want to go to `/Users`, you'll have to type `cd /Users`.
 
-## Clipboard Viewer
-Whenever you <kbd>yank</kbd>, `zsh-edit` will list the contents of your kill ring (including the
-cut buffer) below your command line. Moreover, when you use <kbd>yank-pop</kbd>, `zsh-edit` will
-show you which kill is currently selected, making it easier to cycle to the right one.
-
-To view your clipboard at any time, without modifying your command line, just press
-<kbd>yank-pop</kbd>.
-
-In addition, whenever you perform a <kbd>yank</kbd>, `zsh-edit` eliminates all duplicate kills
-from your kill ring. Thus, each entry listed is guaranteed to be unique.
-
-## Reverse Yank-Pop
-`zsh-edit` adds a new widget <kbd>reverse-yank-pop</kbd> and binds it to
-<kbd>Alt</kbd><kbd>Shift</kbd><kbd>Y</kbd>. It functions just like <kbd>yank-pop</kbd>, but lets
-you cycle in the opposite direction.
-
-## Better Word Matching
+## Better `backward/forward-(kill-)word` Widgets with Subword Matching
 By default, Zsh's widgets
 * <kbd>forward-word</kbd>,
 * <kbd>backward-word</kbd>,
