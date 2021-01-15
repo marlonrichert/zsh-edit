@@ -1,4 +1,5 @@
 #!/bin/zsh
+emulate -L zsh; setopt $_edit_opts
 
 cdpath=()
 local dir=$PWD:h

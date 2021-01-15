@@ -1,7 +1,8 @@
 #!/bin/zsh
+zmodload zsh/complist
 
 _show_clipboard() {
-  setopt $_edit_opts
+  setopt localoptions $_edit_opts
 
   local displ=( "$CUTBUFFER" $killring[@] )
   compadd -V kill-ring -QU -ld displ - $CUTBUFFER $killring[@]
@@ -11,7 +12,5 @@ _show_clipboard() {
   compstate[list_max]=0
   (( compstate[nmatches] > 0 ))
 }
-
-zmodload zsh/complist
 
 _show_clipboard "$@"

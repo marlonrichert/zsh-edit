@@ -1,15 +1,19 @@
 #!/bin/zsh
-setopt $_edit_opts
-
-local subword="([[:WORD:]]##~*[[:lower:]]*[[:upper:]]*~*[[:alnum:]]*[^[:alnum:]]*)"
-local nonword='([^[:WORD:]]##)'
-
+setopt localoptions $_edit_opts
 local +h -i MARK
-if [[ $WIDGET == *backward-* ]]; then
-  (( MARK = CURSOR - ${(M)#LBUFFER%%($~subword|$~nonword~*[[:space:]]*[[:punct:]]*)(?|)} ))
-else
-  (( MARK = CURSOR + ${(M)#RBUFFER##(?|)($~subword|$~nonword~*[[:punct:]]*[[:space:]]*)} ))
-fi
+
+() {
+  emulate -L zsh; setopt $_edit_opts
+
+  local subword="([[:WORD:]]##~*[[:lower:]]*[[:upper:]]*~*[[:alnum:]]*[^[:alnum:]]*)"
+  local nonword='([^[:WORD:]]##)'
+
+  if [[ $WIDGET == *backward-* ]]; then
+    (( MARK = CURSOR - ${(M)#LBUFFER%%($~subword|$~nonword~*[[:space:]]*[[:punct:]]*)(?|)} ))
+  else
+    (( MARK = CURSOR + ${(M)#RBUFFER##(?|)($~subword|$~nonword~*[[:punct:]]*[[:space:]]*)} ))
+  fi
+}
 
 (( MARK != CURSOR ))
 local -i ret=$?

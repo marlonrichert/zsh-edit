@@ -1,12 +1,12 @@
 #!/bin/zsh
 () {
   emulate -L zsh
-  typeset -gHa _edit_opts=( localoptions extendedglob rcquotes warncreateglobal )
+  typeset -gHa _edit_opts=( extendedglob rcquotes warncreateglobal )
   setopt $_edit_opts
 
   local fdir=${${(%):-%x}:A:h}/functions
   typeset -gU FPATH fpath=( $fdir $fpath )
-  autoload -Uz add-zsh-hook $fdir/*~*.zwc
+  autoload -Uz add-zsh-hook $fdir/_*~*.zwc
 
   add-zsh-hook chpwd _cdpath
 
