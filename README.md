@@ -6,6 +6,7 @@
   * [Clipboard Viewer](#clipboard-viewer)
   * [Back Button](#back-button)
   * [`cd` to Ancestors & Siblings](#cd-to-ancestors--siblings)
+  * [`bindkey` Extensions](#bindkey-extensions)
 * [Author](#author)
 * [License](#license)
 
@@ -82,6 +83,29 @@ then
 To reduce the number of false positives, children of `/` and `~` are not included. So, for the
 example above, if you want to go to `/Users/marlon/git`, you'll have to type `cd ~/git`. Likewise,
 if you want to go to `/Users`, you'll have to type `cd /Users`.
+
+## `bindkey` Extensions
+`zsh-edit` extends `bindkey` with the following new options:
+```zsh
+# List unused keybindings in the main keymap or another one.
+bindkey -u
+bindkey -u -M vicmd
+
+# Look up the names of keys listed by `bindkey`.
+bindkey -n '^[^[[5~'
+
+# Bind commands. What's more, using these will not sacrifice your current command line.
+bindkey -c '^[.'  'cd ..'
+bindkey -c '^[`'  'cd ~'
+bindkey -c '^L'   'ls'
+bindkey -c '^S'   'git status'
+bindkey -c '^O'   'git log --oneline'
+```
+Tip: If you use
+[`zkbd`](http://zsh.sourceforge.net/Doc/Release/User-Contributions.html#Keyboard-Definition)
+or
+[`zsh-autocomplete`](https://github.com/marlonrichert/zsh-autocomplete),
+`bindkey -n` will give better results.
 
 ## Author
 © 2020 [Marlon Richert](https://github.com/marlonrichert)

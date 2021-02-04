@@ -1,0 +1,4 @@
+#!/bin/zsh
+zle .push-line-or-edit
+BUFFER=${(e)WIDGET}
+zle .accept-line

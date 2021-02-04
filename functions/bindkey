@@ -1,0 +1,89 @@
+#!/bin/zsh
+zmodload zsh/complist
+zmodload -Fa zsh/terminfo p:terminfo
+
+bindkey() {
+  local -A opts=()
+  zparseopts -D -E -A opts - c n u
+
+  if [[ -v opts[-c] ]]; then
+    zle -N "$@[-1]" _execute_cmd
+    builtin bindkey "$@"
+  elif [[ -v opts[-n] ]]; then
+    local code="$(print -b - $1)"
+    local name=${${(k)key[(Re)$code]}:-${(k)terminfo[(Re)$code]}}
+    if [[ -z $name ]]; then
+      case $code in
+        $'\C-@'* )
+          name='Control-Space'
+          code=${code#[$'\C-@']}
+          [[ -n "$code" ]] &&
+            name+=" + $(bindkey -n $code)"
+          ;;
+        $'\C-?'* )
+          name='Delete'
+          code=${code#[$'\C-?']}
+          [[ -n "$code" ]] &&
+            name+=" + $(bindkey -n $code)"
+          ;;
+        $'\e'* )
+          name="Alt"
+          code="${code#$'\e'}"
+          [[ -n "$code" ]] &&
+            name+="-$(bindkey -n $code)"
+          ;;
+        [$'\C-A'-$'\C-^']* )
+          name="Control-${(SM)${(Mq+)code#[$'\C-A'-$'\C-^']}%[A-^]}"
+          code="${code#[$'\C-A'-$'\C-^']}"
+          [[ -n "$code" ]] &&
+            name+=" + $(bindkey -n $code)"
+          ;;
+        * )
+          name='??'
+          ;;
+      esac
+    fi
+    print $name
+  elif [[ -v opts[-u] ]]; then
+    local -a args=( $@ )
+    .undefined-keys.print() {
+      local -a val=()
+      local key; for key in $@; do
+        [[ $(builtin bindkey $args[@] - $key)$(builtin bindkey $args[@] -p - $key)
+            == *'undefined-key' ]] &&
+          val+=( ${${${${${(q+)key}//'\C-'/^}//'\\'/\\}#(|\$)[\']}%[\']} )
+      done
+      (( $#val )) &&
+        print -cr - ${(q-)val}
+    }
+    {
+      local -a control=( {$'\0'..$'\C-B'} {$'\C-D'..$'\C-_'} $'\C-?' )
+      local -a printable=( {' '..'~'} )
+      local -a termkeys=( kbs kich1 kdch1 khome kend kpp knp kcuu1 kcub1 kcud1 kcuf1 )
+      termkeys=( ${(vn)terminfo[(I)(${(~j:|:)termkeys})]} )
+      local -a fkeys=( ${(vn)terminfo[(I)kf<1-20>]} )
+
+      .undefined-keys.print $printable &&
+        print
+      .undefined-keys.print $control &&
+        print
+      .undefined-keys.print $'\e'$^printable &&
+        print
+      .undefined-keys.print $'\e'$^control &&
+        print
+      .undefined-keys.print $termkeys &&
+        print
+      .undefined-keys.print $'\e'$^termkeys
+        print
+      .undefined-keys.print $fkeys &&
+        print
+      .undefined-keys.print $'\e'$^fkeys
+    } always {
+      unfunction .undefined-keys.print
+    }
+  else
+    builtin bindkey "$@"
+  fi
+}
+
+bindkey "$@"
