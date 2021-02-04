@@ -2,44 +2,15 @@
 `zsh-edit` is a set of powerful extensions to the Zsh command line editor.
 
 * Features:
+  * [Better (Sub)Word Movement](#better-subword-movement)
   * [Clipboard Viewer](#clipboard-viewer)
   * [`cd` to Ancestors & Siblings](#cd-to-ancestors--siblings)
-  * [Better (Sub)Word Movement](#better-subword-movement)
 * [Author](#author)
 * [License](#license)
 
-## Clipboard Viewer
-Whenever you <kbd>yank</kbd> (<kbd>Control</kbd><kbd>Y</kbd> by default), `zsh-edit` will list the
-contents of your kill ring (including the cut buffer) below your command line. In addition,
-`zsh-edit` eliminates all duplicate kills from your kill ring. Thus, each entry listed is
- guaranteed to be unique.
-
-Furthermore, after using <kbd>yank</kbd>, when you use <kbd>yank-pop</kbd>
-(<kbd>Alt</kbd><kbd>Y</kbd> by default), `zsh-edit` will show you which kill is currently selected,
-making it easier to cycle to the right one. To view your clipboard at any time, without modifying
-your command line, just press <kbd>yank-pop</kbd> by itself.
-
-Finally, `zsh-edit` adds a new widget <kbd>reverse-yank-pop</kbd>, which lets you cycle in the
-opposite direction. It is bound in the `emacs` keymap (which is the default keymap) to
-<kbd>Alt</kbd><kbd>Shift</kbd><kbd>Y</kbd>.
-
-## `cd` to Ancestors & Siblings
-When you use `cd`, you can now type the name of any ancestor dir and you'll be taken straight to
-it. What's more, this also works for sibling dirs, including siblings of ancestors. To top it off,
-Zsh will now also complete these dirs for you.
-
-For example, if you're in `/Users/marlon/git/prezto/modules/history-substring-search/external`,
-then
-* `cd prezto` takes you to `/Users/marlon/git/prezto`.
-* `cd fasd` takes you to `/Users/marlon/git/prezto/modules/fasd`
-
-To reduce the number of false positives, children of `/` and `~` are not included. So, for the
-example above, if you want to go to `/Users/marlon/git`, you'll have to type `cd ~/git`. Likewise,
-if you want to go to `/Users`, you'll have to type `cd /Users`.
-
 ## Better (Sub)Word Movement
 By default, Zsh's widgets <kbd>forward-word</kbd>, <kbd>backward-word</kbd>, <kbd>kill-word</kbd>
-and <kbd>backward-kill-word</kbd> always move to the beginning of the next word and do not
+and <kbd>backward-kill-word</kbd> always move to the left side of the each word and do not
 recognize subwords (for example, `dev` and `Build` in `devBuild`). This often causes them to move
 or delete too much, especially in the `forward` direction.
 
@@ -75,6 +46,35 @@ Subword matching can be customized by adding or removing characters from `$WORDC
 uppercase letters, any character in `$WORDCHARS` will be parsed parsed as starting a subword and
 the cursor will end up to the left of it. So, for example, if you want the cursor to always end up
 to the left of any adjacent spaces, just add a space to `$WORDCHARS`.
+
+## Clipboard Viewer
+Whenever you <kbd>yank</kbd> (<kbd>Control</kbd><kbd>Y</kbd> by default), `zsh-edit` will list the
+contents of your kill ring (including the cut buffer) below your command line. In addition,
+`zsh-edit` eliminates all duplicate kills from your kill ring. Thus, each entry listed is
+ guaranteed to be unique.
+
+Furthermore, after using <kbd>yank</kbd>, when you use <kbd>yank-pop</kbd>
+(<kbd>Alt</kbd><kbd>Y</kbd> by default), `zsh-edit` will show you which kill is currently selected,
+making it easier to cycle to the right one. To view your clipboard at any time, without modifying
+your command line, just press <kbd>yank-pop</kbd> by itself.
+
+Finally, `zsh-edit` adds a new widget <kbd>reverse-yank-pop</kbd>, which lets you cycle in the
+opposite direction. It is bound in the `emacs` keymap (which is the default keymap) to
+<kbd>Alt</kbd><kbd>Shift</kbd><kbd>Y</kbd>.
+
+## `cd` to Ancestors & Siblings
+When you use `cd`, you can now type the name of any ancestor dir and you'll be taken straight to
+it. What's more, this also works for sibling dirs, including siblings of ancestors. To top it off,
+Zsh will now also complete these dirs for you.
+
+For example, if you're in `/Users/marlon/git/prezto/modules/history-substring-search/external`,
+then
+* `cd prezto` takes you to `/Users/marlon/git/prezto`.
+* `cd fasd` takes you to `/Users/marlon/git/prezto/modules/fasd`
+
+To reduce the number of false positives, children of `/` and `~` are not included. So, for the
+example above, if you want to go to `/Users/marlon/git`, you'll have to type `cd ~/git`. Likewise,
+if you want to go to `/Users`, you'll have to type `cd /Users`.
 
 ## Author
 © 2020 [Marlon Richert](https://github.com/marlonrichert)
