@@ -4,6 +4,7 @@
 * Features:
   * [Better (Sub)Word Movement](#better-subword-movement)
   * [Clipboard Viewer](#clipboard-viewer)
+  * [Back Button](#back-button)
   * [`cd` to Ancestors & Siblings](#cd-to-ancestors--siblings)
 * [Author](#author)
 * [License](#license)
@@ -61,6 +62,12 @@ your command line, just press <kbd>yank-pop</kbd> by itself.
 Finally, `zsh-edit` adds a new widget <kbd>reverse-yank-pop</kbd>, which lets you cycle in the
 opposite direction. It is bound in the `emacs` keymap (which is the default keymap) to
 <kbd>Alt</kbd><kbd>Shift</kbd><kbd>Y</kbd>.
+
+## Back Button
+Press <kbd>Alt</kbd><kbd>-</kbd> or <kbd>Alt</kbd><kbd>=</kbd> to quickly view and navigate to any
+dirs you've already visited in the same shell session.
+
+Tip: For the most intuitive experience, add `setopt pushdminus` to your `.zshrc` file.
 
 ## `cd` to Ancestors & Siblings
 When you use `cd`, you can now type the name of any ancestor dir and you'll be taken straight to

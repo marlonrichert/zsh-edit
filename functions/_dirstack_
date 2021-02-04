@@ -1,0 +1,14 @@
+#autoload
+if [[ ! -v _comp_setup ]]; then
+  autoload -Uz compinit
+  compinit
+fi
+
+_dirstack_() {
+  _main_complete _directory_stack
+  compstate[insert]='menu'; (( compstate[nmatches] > 1 )) ||
+    compstate[insert]='1'
+  compstate[list]='list force'
+}
+
+_dirstack_ "$@"
