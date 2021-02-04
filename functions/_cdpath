@@ -2,8 +2,9 @@
 emulate -L zsh; setopt $_edit_opts
 
 cdpath=()
-local dir=$PWD:h
-while (( ${#${(D)dir}} > 1 )); do
+local dir=$PWD:h root=${PWD:h1}
+while [[ $dir != $root ]]; do
   cdpath+=( $dir )
   dir=$dir:h
 done
+cdpath=( ${cdpath:#~} )
