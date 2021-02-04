@@ -1,5 +1,6 @@
 #!/bin/zsh
 zmodload zsh/complist
+zmodload zsh/parameter
 zmodload -Fa zsh/terminfo p:terminfo
 
 bindkey() {
@@ -11,7 +12,16 @@ bindkey() {
     builtin bindkey "$@"
   elif [[ -v opts[-n] ]]; then
     local code="$(print -b - $1)"
-    local name=${${(k)key[(Re)$code]}:-${(k)terminfo[(Re)$code]}}
+    local name=${(k)key[(Re)$code]}
+    if [[ -z $name ]]; then
+      name=${(k)terminfo[(Re)$code]}
+      if [[ -n $name && -v commands[man] ]]; then
+        local expl=${(SM)"$(< $(man --path terminfo))"#$'\t'$name$'\t'*$'\tT{\n'*' key'}
+        expl=${(C)${expl##*$'\n'}%%(|' function')' key'}
+        [[ -n $expl ]] &&
+          name=$expl
+      fi
+    fi
     if [[ -z $name ]]; then
       case $code in
         $'\C-@'* )
