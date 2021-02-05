@@ -6,7 +6,7 @@
 
   local fdir=${${(%):-%x}:A:h}/functions
   typeset -gU FPATH fpath=( $fdir $fpath )
-  autoload -Uz add-zsh-hook $fdir/*~*.zwc
+  autoload -Uz add-zsh-hook $fdir/_*~*.zwc
 
   add-zsh-hook chpwd _cdpath
 
@@ -23,4 +23,6 @@
   zle -N _dirstack
   bindkey -M emacs '^[-' _dirstack
   bindkey -M emacs '^[=' _dirstack
+
+  autoload -Uz $fdir/bindkey
 }

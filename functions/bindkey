@@ -1,9 +1,12 @@
 #!/bin/zsh
+emulate -L zsh
 zmodload zsh/complist
 zmodload zsh/parameter
 zmodload -Fa zsh/terminfo p:terminfo
 
 bindkey() {
+  emulate -L zsh; setopt $_edit_opts
+
   local -A opts=()
   zparseopts -D -E -A opts - c n u
 

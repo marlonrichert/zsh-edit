@@ -1,5 +1,8 @@
 #!/bin/zsh
-setopt localoptions $_edit_opts
+
+[[ $WIDGET == *kill-* ]] &&
+  zle -f kill
+
 local +h -i MARK
 
 () {
@@ -18,17 +21,20 @@ local +h -i MARK
 (( MARK != CURSOR ))
 local -i ret=$?
 
-case $WIDGET in
-  *kill-*)
-    zle .kill-region
-    zle -f kill
-    ;;
-  *backward-*)
-    zle .backward-char -n $(( CURSOR - MARK ))
-    ;;
-  *)
-    zle .forward-char -n $(( MARK - CURSOR ))
-    ;;
-esac
+() {
+  emulate -L zsh; setopt $_edit_opts
+
+  case $WIDGET in
+    *kill-*)
+      zle .kill-region
+      ;;
+    *backward-*)
+      zle .backward-char -n $(( CURSOR - MARK ))
+      ;;
+    *)
+      zle .forward-char -n $(( MARK - CURSOR ))
+      ;;
+  esac
+}
 
 return ret

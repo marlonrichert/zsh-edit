@@ -3,30 +3,37 @@ autoload -Uz _show_clipboard
 zle -C _show_clipboard list-choices _show_clipboard
 
 _visual_yank() {
-  setopt localoptions $_edit_opts
-
   local -i len=$#killring[@]
   {
-    local -aU kills=( "$CUTBUFFER" $killring[@] )
-    shift kills
-    killring=( ${(@)kills[@]:#} )
+    () {
+      emulate -L zsh; setopt $_edit_opts
+      local -aU kills=( "$CUTBUFFER" $killring[@] )
+      shift kills
+      killring=( ${(@)kills[@]:#} )
 
-    zle -f yank
+      zle -f yank
 
-    if [[ $WIDGET == reverse-* ]]; then
-      local widget=.${WIDGET#reverse-}
-      local -i i; for (( i = 0; i < $#killring[@]; i++ )); do
-        zle $widget
-      done
-    else
-      zle .$WIDGET
-    fi
+      if [[ $WIDGET == reverse-* ]]; then
+        local widget=.${WIDGET#reverse-}
+        local -i i; for (( i = 0; i < $#killring[@]; i++ )); do
+          zle $widget
+        done
+      else
+        zle .$WIDGET
+      fi
 
-    export ZLS_COLORS="=${(b)BUFFER[YANK_START+1,YANK_END]}=07"
+      export ZLS_COLORS="=${(b)BUFFER[YANK_START+1,YANK_END]}=07"
+    }
+
     zle _show_clipboard
+
   } always {
-    (( $#killring[@] < len )) &&
-      killring+=( "${(s:.:@)${(r:$((len - $#killring[@] - 1))::.:):-}}" )
+    () {
+      emulate -L zsh; setopt $_edit_opts
+
+      (( $#killring[@] < len )) &&
+        killring+=( "${(s:.:@)${(r:$((len - $#killring[@] - 1))::.:):-}}" )
+    }
   }
 }
 

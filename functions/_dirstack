@@ -1,43 +1,49 @@
 #!/bin/zsh
 zmodload zsh/complist
 autoload -Uz _dirstack_
+zle -C _dirstack_ menu-select _dirstack_
 
 _dirstack() {
-  setopt localoptions $_edit_opts
+  () {
+    emulate -L zsh; setopt $_edit_opts
 
-  if [[ $LASTWIDGET != $WIDGET ]]; then
-    zle .push-line
-    if [[ -o autocd ]]; then
-      LBUFFER='~'
-    else
-      LBUFFER='cd '
-    fi
-    case $KEYS in
-      *[-_] )
-        LBUFFER+='-'
-        ;;
-      *[=+] )
-        LBUFFER+='+'
-        ;;
-      * )
-        if [[ -o pushdminus ]]; then
+    if [[ $LASTWIDGET != $WIDGET ]]; then
+      zle .push-line
+      if [[ -o autocd ]]; then
+        LBUFFER='~'
+      else
+        LBUFFER='cd '
+      fi
+      case $KEYS in
+        *[-_] )
           LBUFFER+='-'
-        else
+          ;;
+        *[=+] )
           LBUFFER+='+'
-        fi
+          ;;
+        * )
+          if [[ -o pushdminus ]]; then
+            LBUFFER+='-'
+          else
+            LBUFFER+='+'
+          fi
+          ;;
+      esac
+    fi
+    case $LBUFFER in
+      *'-' )
+        bindkey -M menuselect '^[-' menu-complete
+        bindkey -M menuselect '^[=' reverse-menu-complete
+        ;;
+      *'+' )
+        bindkey -M menuselect '^[=' menu-complete
+        bindkey -M menuselect '^[-' reverse-menu-complete
         ;;
     esac
-  fi
-  case $LBUFFER in
-    *'-' )
-      bindkey -M menuselect '^[-' menu-complete
-      bindkey -M menuselect '^[=' reverse-menu-complete
-      ;;
-    *'+' )
-      bindkey -M menuselect '^[=' menu-complete
-      bindkey -M menuselect '^[-' reverse-menu-complete
-      ;;
-  esac
+  }
+
+  setopt localoptions $_edit_opts
+
   zle _dirstack_
 
   case $_lastcomp[nmatches] in
@@ -56,5 +62,4 @@ _dirstack() {
   esac
 }
 
-zle -C _dirstack_ menu-select _dirstack_
 _dirstack "$@"
