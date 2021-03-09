@@ -17,10 +17,15 @@ bindkey() {
     local code="$(print -b - $1)"
     local name=${(k)key[(Re)$code]}
     if [[ -z $name ]]; then
-      name=${(k)terminfo[(Re)$code]}
+      local -a matches=( "${(k@)terminfo[(Re)$code]}" )
+      (( $#matches[@] > 1 )) &&
+        matches=( "$matches[(r)k*]" )
+      name="$matches[1]"
       if [[ -n $name && -v commands[man] ]]; then
-        local expl=${(SM)"$(< $(man --path terminfo))"#$'\t'$name$'\t'*$'\tT{\n'*' key'}
-        expl=${(C)${expl##*$'\n'}%%(|' function')' key'}
+        local -a match mbegin mend
+        local expl="$(< $(man --path terminfo))"
+        expl=${(SM)expl#$'\t'${name}$'\t'??$'\t'T\{$'\n'(#b)(*)$'\n'}
+        expl=${${(C)match[1]%%(| function) key}//[ -]/}
         [[ -n $expl ]] &&
           name=$expl
       fi

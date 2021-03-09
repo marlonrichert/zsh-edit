@@ -96,18 +96,22 @@ if you want to go to `/Users`, you'll have to type `cd /Users`.
 `zsh-edit` extends `bindkey` with the following new options:
 ```zsh
 # List unused keybindings in the main keymap or another one.
-bindkey -u
-bindkey -u -M vicmd
+% bindkey -u
+% bindkey -u -M vicmd
+
+# Bind commands directly to keyboard shortcuts in your .zshrc file.
+# What's more, when using these, your current command line will be left intact.
+bindkey -c '^S'     'git status --show-stash'
+bindkey -c '^G'     'git log'
+bindkey -c '^O'     'git log --oneline'
+bindkey -c '^[^[OA' 'git push'
+bindkey -c '^[^[OB' 'git pull --autostash'
 
 # Look up the names of keys listed by `bindkey`.
-bindkey -n '^[^[[5~'
-
-# Bind commands. What's more, using these will not sacrifice your current command line.
-bindkey -c '^[.'  'cd ..'
-bindkey -c '^[`'  'cd ~'
-bindkey -c '^L'   'ls'
-bindkey -c '^S'   'git status'
-bindkey -c '^O'   'git log --oneline'
+% bindkey -n '^[^[OA'
+Alt-Up
+% bindkey -n '^[^[OB'
+Alt-Down
 ```
 Tip: If you use
 [`zkbd`](http://zsh.sourceforge.net/Doc/Release/User-Contributions.html#Keyboard-Definition)
