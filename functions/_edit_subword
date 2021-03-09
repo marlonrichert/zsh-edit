@@ -1,40 +1,34 @@
 #!/bin/zsh
+emulate -L zsh; setopt $_edit_opts
 
 [[ $WIDGET == *kill-* ]] &&
   zle -f kill
 
-local +h -i MARK
+local -i end start=$CURSOR
+local subword="([[:WORD:]]##~*[[:lower:]]*[[:upper:]]*~*[[:alnum:]]*[^[:alnum:]]*)"
+local nonword='([^[:WORD:]]##)'
+if [[ $WIDGET == *backward-* ]]; then
+  (( end = start - ${(M)#LBUFFER%%($~subword|$~nonword~*[[:space:]]*[[:punct:]]*)(?|)} ))
+else
+  (( end = start + ${(M)#RBUFFER##(?|)($~subword|$~nonword~*[[:punct:]]*[[:space:]]*)} ))
+fi
 
-() {
-  emulate -L zsh; setopt $_edit_opts
+(( end == start )) &&
+  return 1
 
-  local subword="([[:WORD:]]##~*[[:lower:]]*[[:upper:]]*~*[[:alnum:]]*[^[:alnum:]]*)"
-  local nonword='([^[:WORD:]]##)'
+case $WIDGET in
+  *kill-*)
+    (( REGION_ACTIVE )) ||
+      CURSOR=$start
+    MARK=$end
+    zle .kill-region
+    ;;
+  *backward-*)
+    zle .backward-char -n $(( start - end ))
+    ;;
+  *)
+    zle .forward-char -n $(( end - start ))
+    ;;
+esac
 
-  if [[ $WIDGET == *backward-* ]]; then
-    (( MARK = CURSOR - ${(M)#LBUFFER%%($~subword|$~nonword~*[[:space:]]*[[:punct:]]*)(?|)} ))
-  else
-    (( MARK = CURSOR + ${(M)#RBUFFER##(?|)($~subword|$~nonword~*[[:punct:]]*[[:space:]]*)} ))
-  fi
-}
-
-(( MARK != CURSOR ))
-local -i ret=$?
-
-() {
-  emulate -L zsh; setopt $_edit_opts
-
-  case $WIDGET in
-    *kill-*)
-      zle .kill-region
-      ;;
-    *backward-*)
-      zle .backward-char -n $(( CURSOR - MARK ))
-      ;;
-    *)
-      zle .forward-char -n $(( MARK - CURSOR ))
-      ;;
-  esac
-}
-
-return ret
+return 0
