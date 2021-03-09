@@ -4,11 +4,9 @@
   typeset -gHa _edit_opts=( extendedglob NO_listbeep rcquotes warncreateglobal )
   setopt $_edit_opts
 
-  local fdir=${${(%):-%x}:A:h}/functions
+  local fdir=${${(%):-%x}:h}/functions
   typeset -gU FPATH fpath=( $fdir $fpath )
   autoload -Uz add-zsh-hook $fdir/_*~*.zwc
-
-  add-zsh-hook chpwd _cdpath
 
   local widget
   for widget in {forward,backward,kill,backward-kill}-word; do

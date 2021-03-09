@@ -71,9 +71,13 @@ dirs you've already visited in the same shell session.
 Tip: For the most intuitive experience, add `setopt pushdminus` to your `.zshrc` file.
 
 ## `cd` to Ancestors & Siblings
-When you use `cd`, you can now type the name of any ancestor dir and you'll be taken straight to
-it. What's more, this also works for sibling dirs, including siblings of ancestors. To top it off,
-Zsh will now also complete these dirs for you.
+💡 This is an optional feature. To enable it, add the following to your `.zshrc` file:
+```zsh
+add-zsh-hook chpwd _cdpath
+```
+Thereafter, whenever you use `cd`, you can type the name of any ancestor dir and you'll be taken
+straight to it. What's more, this also works for sibling dirs, including siblings of ancestors. To
+top it off, Zsh will also complete these dirs for you.
 
 For example, if you're in `/Users/marlon/git/prezto/modules/history-substring-search/external`,
 then
