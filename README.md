@@ -4,7 +4,7 @@
 * Features:
   * [Better (Sub)Word Movement](#better-subword-movement)
   * [Clipboard Viewer](#clipboard-viewer)
-  * [Back Button](#back-button)
+  * [`cd` History Navigation](#cd-history-button)
   * [`cd` to Ancestors & Siblings](#cd-to-ancestors--siblings)
   * [`bindkey` Extensions](#bindkey-extensions)
 * [Author](#author)
@@ -44,10 +44,20 @@ This has the following benefits:
 * Subwords are now recognized and `devBuild` is parsed as two words, `dev` and `Build`, with the
   cursor stopping at the end of each.
 
-Subword matching can be customized by adding or removing characters from `$WORDCHARS`: Besides
-uppercase letters, any character in `$WORDCHARS` will be parsed parsed as starting a subword and
-the cursor will end up to the left of it. So, for example, if you want the cursor to always end up
-to the left of any adjacent spaces, just add a space to `$WORDCHARS`.
+Subword matching can be customized by adding or removing characters from `$WORDCHARS`: In addition
+to uppercase letters, any character in `$WORDCHARS` will be parsed as starting a subword and the
+cursor will end up to the left of it. So, for example, if you want the cursor to always end up to
+the left of any adjacent spaces, just add a space to `$WORDCHARS`.
+
+## `cd` History Navigation
+`zsh-edit` adds the following keyboard shortcuts for quick directory navigation:
+
+| key binding | action |
+| --- | --- |
+| <kbd>Alt</kbd><kbd>-</kbd> | Backward in dir history |
+| <kbd>Alt</kbd><kbd>=</kbd> | Forward in dir history |
+| <kbd>Alt</kbd><kbd>`</kbd> | Select from dir history |
+
 
 ## Clipboard Viewer
 Whenever you <kbd>yank</kbd> (<kbd>Control</kbd><kbd>Y</kbd> by default), `zsh-edit` will list the
@@ -63,12 +73,6 @@ your command line, just press <kbd>yank-pop</kbd> by itself.
 Finally, `zsh-edit` adds a new widget <kbd>reverse-yank-pop</kbd>, which lets you cycle in the
 opposite direction. It is bound in the `emacs` keymap (which is the default keymap) to
 <kbd>Alt</kbd><kbd>Shift</kbd><kbd>Y</kbd>.
-
-## Back Button
-Press <kbd>Alt</kbd><kbd>-</kbd> or <kbd>Alt</kbd><kbd>=</kbd> to quickly view and navigate to any
-dirs you've already visited in the same shell session.
-
-Tip: For the most intuitive experience, add `setopt pushdminus` to your `.zshrc` file.
 
 ## `cd` to Ancestors & Siblings
 💡 This is an optional feature. To enable it, add the following to your `.zshrc` file:
