@@ -1,0 +1,10 @@
+#!/bin/zsh
+case $KEYS in
+  *[-_] )
+    pushd -1
+    ;;
+  *[=+] )
+    pushd +0
+    ;;
+esac
+zle .reset-prompt
