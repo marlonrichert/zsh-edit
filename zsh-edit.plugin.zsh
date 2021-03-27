@@ -7,7 +7,7 @@ setopt autopushd pushdminus
 
   local fdir=${${(%):-%x}:h}/functions
   typeset -gU FPATH fpath=( $fdir $fpath )
-  autoload -Uz add-zsh-hook $fdir/_*~*.zwc
+  autoload -Uz add-zsh-hook $fdir/bindkey $fdir/_*~*.zwc
 
   local widget
   for widget in {forward,backward,kill,backward-kill}-word; do
@@ -28,6 +28,4 @@ setopt autopushd pushdminus
 
   bindkey -M menuselect '^[-' menu-complete
   bindkey -M menuselect '^[=' reverse-menu-complete
-
-  autoload -Uz $fdir/bindkey
 }
