@@ -1,6 +1,15 @@
 # Zsh-Edit
 Zsh-Edit is a set of powerful extensions to the Zsh command line editor.
 
+## `cd` History Navigation
+Zsh-Edit adds the following keyboard shortcuts for quick directory navigation:
+
+| key binding | action |
+| --- | --- |
+| <kbd>Alt</kbd><kbd>-</kbd> | Backward in dir history |
+| <kbd>Alt</kbd><kbd>=</kbd> | Forward in dir history |
+| <kbd>Alt</kbd><kbd>`</kbd> | Select from dir history |
+
 ## Better (Sub)Word Movement
 By default, Zsh's widgets <kbd>forward-word</kbd>, <kbd>backward-word</kbd>, <kbd>kill-word</kbd>
 and <kbd>backward-kill-word</kbd> fail to stop on many of the positions that we humans see as word
@@ -83,33 +92,6 @@ Alt-Up
 % bindkey -n '^[^[OB'
 Alt-Down
 ```
-
-## `cd` History Navigation
-Zsh-Edit adds the following keyboard shortcuts for quick directory navigation:
-
-| key binding | action |
-| --- | --- |
-| <kbd>Alt</kbd><kbd>-</kbd> | Backward in dir history |
-| <kbd>Alt</kbd><kbd>=</kbd> | Forward in dir history |
-| <kbd>Alt</kbd><kbd>`</kbd> | Select from dir history |
-
-## `cd` to Ancestors & Siblings
-💡 This is an optional feature. To enable it, add the following to your `.zshrc` file:
-```zsh
-add-zsh-hook chpwd _cdpath
-```
-Thereafter, whenever you use `cd`, you can type the name of any ancestor dir and you'll be taken
-straight to it. What's more, this also works for sibling dirs, including siblings of ancestors. To
-top it off, Zsh will also complete these dirs for you.
-
-For example, if you're in `/Users/marlon/git/prezto/modules/history-substring-search/external`,
-then
-* `cd prezto` takes you to `/Users/marlon/git/prezto`.
-* `cd fasd` takes you to `/Users/marlon/git/prezto/modules/fasd`
-
-To reduce the number of false positives, children of `/` and `~` are not included. So, for the
-example above, if you want to go to `/Users/marlon/git`, you'll have to type `cd ~/git`. Likewise,
-if you want to go to `/Users`, you'll have to type `cd /Users`.
 
 ## Author
 © 2020 [Marlon Richert](https://github.com/marlonrichert)

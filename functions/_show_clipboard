@@ -3,7 +3,7 @@ zmodload zsh/complist
 
 _show_clipboard() {
   local displ=( "$CUTBUFFER" $killring[@] )
-  compadd -V kill-ring -QU -ld displ - $CUTBUFFER $killring[@]
+  compadd -V kill-ring -ld displ -QU - $CUTBUFFER $killring[@]
 
   compstate[insert]=''
   compstate[list]='list force'

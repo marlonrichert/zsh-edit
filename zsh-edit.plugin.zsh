@@ -6,8 +6,7 @@ setopt autopushd pushdminus
   setopt $_edit_opts
 
   local fdir=${${(%):-%x}:h}/functions
-  typeset -gU FPATH fpath=( $fdir $fpath )
-  autoload -Uz add-zsh-hook $fdir/bindkey $fdir/_*~*.zwc
+  autoload -Uz $fdir/bindkey $fdir/_*~*.zwc
 
   local widget
   for widget in {forward,backward,kill,backward-kill}-word; do
