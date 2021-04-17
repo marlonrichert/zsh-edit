@@ -6,6 +6,7 @@ setopt autopushd pushdminus
   setopt $_edit_opts
 
   local fdir=${${(%):-%x}:h}/functions
+  unfunction bindkey 2>/dev/null
   autoload -Uz $fdir/bindkey $fdir/_*~*.zwc
 
   local widget
