@@ -1,10 +1,11 @@
 #!/bin/zsh
+zle .push-line-or-edit
 case $KEYS in
   *[-_] )
-    pushd -1
+    BUFFER=' pushd -1'
     ;;
   *[=+] )
-    pushd +0
+    BUFFER=' pushd +0'
     ;;
 esac
-zle .reset-prompt
+zle .accept-line
