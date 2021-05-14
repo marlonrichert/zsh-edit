@@ -23,9 +23,8 @@ setopt autopushd pushdminus
   bindkey -M emacs '^[`' _dirstack # Show dir stack.
 
   zle -N _pushd
-  bindkey -M emacs '^[-' _pushd # Go back one dir.
-  bindkey -M emacs '^[=' _pushd # Go forward one dir.
-
+  bindkey -M emacs -c '^[-' '-pushd -1'  # Go backward one dir.
+  bindkey -M emacs -c '^[=' '-pushd +0'  # Go forward one dir.
   bindkey -M menuselect '^[-' menu-complete
   bindkey -M menuselect '^[=' reverse-menu-complete
 }

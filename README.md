@@ -80,13 +80,20 @@ Zsh-Edit extends `bindkey` with the following new options:
 
 # Bind commands directly to keyboard shortcuts in your .zshrc file.
 # What's more, when using these, your current command line will be left intact.
-bindkey -c '^S'     'git status --show-stash'
-bindkey -c '^G'     'git log'
-bindkey -c '^O'     'git log --oneline'
+# By default, these will appear on screen and in history, just as if you typed
+# them & pressed Enter:
 bindkey -c '^[^[OA' 'git push'
-bindkey -c '^[^[OB' 'git pull --autostash'
+bindkey -c '^[^[OB' 'git fetch; git pull --autostash'
+# However, you can hide commands by prepending them with +, @ or -.
+# Use + to print output below the current prompt and start a new command line:
+bindkey -c '^S'     '+git status --show-stash'
+# Use @ to leave the current prompt unmodified (if possible):
+bindkey -c '^[^L'   '@git log'
+# Use - to update the current prompt in place:
+bindkey -c '^[-'    '-pushd -1'
+bindkey -c '^[='    '-pushd +0'
 
-# Look up the names of keys listed by `bindkey`.
+# Look up the names of keys listed by `bindkey`:
 % bindkey -n '^[^[OA'
 Alt-Up
 % bindkey -n '^[^[OB'
