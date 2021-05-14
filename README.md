@@ -53,8 +53,14 @@ that matter to us and makes it easily customizable through the `$WORDCHARS` para
      >   >    >          >        >         >    >    >     >   >    >
 % yarn run test:nocoverage --filter resources/test/apps/HiboxMeet.spec.js
   <   <   <     <         <        <          <    <    <    <   <    <
-# Cursor to the left of space let's start typing right away, without further fiddling. ✨
+# Cursor to the left of space let's start typing right away.
 ```
+
+If you don't want to change your `$WORDCHARS` globally, you can instead use
+```zsh
+zstyle ':edit:*' word-chars ' *?_-.~\'
+```
+which will change `$WORDCHARS` only for the widgets provided by `zsh-edit`.
 
 ## Clipboard Viewer
 Whenever you <kbd>yank</kbd> (<kbd>Control</kbd><kbd>Y</kbd> by default), Zsh-Edit will list the

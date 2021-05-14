@@ -1,6 +1,10 @@
 #!/bin/zsh
 emulate -L zsh; setopt $_edit_opts
 
+local wordchars
+zstyle -s ":edit:$WIDGET:" word-chars wordchars &&
+    local +h WORDCHARS="$wordchars"
+
 [[ $WIDGET == *kill-* ]] &&
   zle -f kill
 
