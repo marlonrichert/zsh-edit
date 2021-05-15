@@ -15,50 +15,44 @@ By default, Zsh's widgets <kbd>forward-word</kbd>, <kbd>backward-word</kbd>, <kb
 and <kbd>backward-kill-word</kbd> fail to stop on many of the positions that we humans see as word
 boundaries:
 ```zsh
-# ZSH default behavior 😭
+# ZSH default behavior 😕
 
 # With default $WORDCHARS:
-      >   >    >          >        >                                    >
 % yarn run test:nocoverage --filter resources/test/apps/HiboxMeet.spec.js
-  <    <   <    <          <        <
+  <   ><  ><   ><         ><       ><                                   >
 # Skips/deletes _way_ too much.
 
 # With WORDCHARS=''
-      >   >    >            >      >         >    >    >         >    >
 % yarn run test:nocoverage --filter resources/test/apps/HiboxMeet.spec.js
-  <    <   <    <            <      <         <    <    <         <    <
+  <   ><  ><   ><           ><     ><        ><   ><   ><        ><   ><>
 # A bit better, but
 #   * does not recognize subwords ('Hibox' and 'Meet') and
 #   * forward motion often still skips/deletes too much.
 ```
-With ``, it's somewhat better, but some word boundaries are still missed:
 
 Zsh-Edit upgrades these widgets with better parsing rules that can find all the word boundaries
 that matter to us and makes it easily customizable through the `$WORDCHARS` parameter.
 
 ```zsh
-# With Zsh-Edit 🤩
+# With Zsh-Edit 🤗
 
 # With default $WORDCHARS:
-     >   >    >          >        >         >    >    >     >   >    >
 % yarn run test:nocoverage --filter resources/test/apps/HiboxMeet.spec.js
-  <    <   <    <          <        <        <    <    <     <   <    <
+  <  > < > <  > <        > <      > <       ><   ><   ><    ><  ><   >< >
 
-# With WORDCHARS=''
-      >   >   >          >  >      >        >    >    >     >   >    >
+# With WORDCHARS='':
 % yarn run test:nocoverage --filter resources/test/apps/HiboxMeet.spec.js
-  <    <   <    <            <      <         <    <    <    <    <    <
+  <  > < > <  > <        >   <    > <       > <  > <  > <   ><  > <  > <>
 
-# With WORDCHARS=' *?_-.~\':
-     >   >    >          >        >         >    >    >     >   >    >
+# With WORDCHARS=' *?~\':
 % yarn run test:nocoverage --filter resources/test/apps/HiboxMeet.spec.js
-  <   <   <     <         <        <          <    <    <    <   <    <
-# Cursor to the left of space let's start typing right away.
+  <  ><  ><   > <        ><       ><        > <  > <  > <   ><  > <  > <>
+# Cursor to the left of space let's you start typing right away.
 ```
 
 If you don't want to change your `$WORDCHARS` globally, you can instead use
 ```zsh
-zstyle ':edit:*' word-chars ' *?_-.~\'
+zstyle ':edit:*' word-chars ' *?~\'
 ```
 which will change `$WORDCHARS` only for the widgets provided by `zsh-edit`.
 
@@ -79,33 +73,43 @@ opposite direction. It is bound in the `emacs` keymap (which is the default keym
 
 ## `bindkey` Extensions
 Zsh-Edit extends `bindkey` with the following new options:
+
+### Bind commands directly to keyboard shortcuts
+What's more, when using these, your current command line will be left intact.
 ```zsh
-# Bind commands directly to keyboard shortcuts in your .zshrc file.
-# What's more, when using these, your current command line will be left intact.
 # By default, these will appear on screen and in history, just as if you typed
 # them & pressed Enter:
 bindkey -c '^[^[OA' 'git push'
 bindkey -c '^[^[OB' 'git fetch; git pull --autostash'
+
 # However, you can hide commands by prepending them with +, @ or -.
 # Use + to print output below the current prompt and start a new command line:
 bindkey -c '^S'     '+git status --show-stash'
+
 # Use @ to leave the current prompt unmodified (if possible):
 bindkey -c '^[^L'   '@git log'
+
 # Use - to update the current prompt in place:
 bindkey -c '^[-'    '-pushd -1'
 bindkey -c '^[='    '-pushd +0'
+```
 
-# Look up the names of keys listed by `bindkey`:
+### Look up key names listed by `bindkey`
+```zsh
 % bindkey -n '^[^[OA'
 Alt-Up
 % bindkey -n '^[^[OB'
 Alt-Down
+```
 
-# List unused keybindings in the main keymap or another one.
+### List unused keybindings in the main keymap or another one
+```zsh
 % bindkey -u
 % bindkey -u -M vicmd
+```
 
-# List duplicate keybindings in the main keymap or another one.
+### List duplicate keybindings in the main keymap or another one
+```zsh
 % bindkey -U
 % bindkey -U -M vicmd
 ```
