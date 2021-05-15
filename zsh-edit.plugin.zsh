@@ -2,7 +2,7 @@
 setopt autopushd pushdminus
 () {
   emulate -L zsh
-  typeset -gHa _edit_opts=( extendedglob NO_listbeep rcquotes warncreateglobal )
+  typeset -gHa _edit_opts=( extendedglob NO_listbeep NO_shortloops warncreateglobal )
   setopt $_edit_opts
 
   local fdir=${${(%):-%x}:h}/functions
