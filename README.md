@@ -80,10 +80,6 @@ opposite direction. It is bound in the `emacs` keymap (which is the default keym
 ## `bindkey` Extensions
 Zsh-Edit extends `bindkey` with the following new options:
 ```zsh
-# List unused keybindings in the main keymap or another one.
-% bindkey -u
-% bindkey -u -M vicmd
-
 # Bind commands directly to keyboard shortcuts in your .zshrc file.
 # What's more, when using these, your current command line will be left intact.
 # By default, these will appear on screen and in history, just as if you typed
@@ -104,6 +100,14 @@ bindkey -c '^[='    '-pushd +0'
 Alt-Up
 % bindkey -n '^[^[OB'
 Alt-Down
+
+# List unused keybindings in the main keymap or another one.
+% bindkey -u
+% bindkey -u -M vicmd
+
+# List duplicate keybindings in the main keymap or another one.
+% bindkey -U
+% bindkey -U -M vicmd
 ```
 
 ## Author

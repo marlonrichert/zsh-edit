@@ -3,12 +3,13 @@ emulate -L zsh
 zmodload zsh/complist
 zmodload zsh/parameter
 zmodload -Fa zsh/terminfo p:terminfo
+zmodload -Fa zsh/zleparameter p:widgets
 
 bindkey() {
   emulate -L zsh; setopt $_edit_opts
 
   local -A opts=()
-  zparseopts -D -E -A opts - c n u
+  zparseopts -D -E -A opts - c n u U
 
   if [[ -v opts[-c] ]]; then
     zle -N ".$@[-1]" _execute_cmd
@@ -82,6 +83,15 @@ bindkey() {
     done
     (( $#val )) &&
         print -cr - ${(q-)val}
+
+  elif [[ -v opts[-U] ]]; then
+    local -a bindings dup_bindings=() all_bindings=( ${(f)"$(bindkey $@)"} )
+    local w; for w in "${(@ko)widgets}"; do
+      bindings=( ${(M)all_bindings:#* $w}  )
+      (( $#bindings > 1 )) &&
+          dup_bindings+=( $w "\t${(j:\t:)bindings[@]% $w}" )
+    done
+    print -aC2 $dup_bindings[@]
 
   else
     builtin bindkey "$@"
