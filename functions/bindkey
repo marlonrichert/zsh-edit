@@ -11,8 +11,9 @@ bindkey() {
   zparseopts -D -E -A opts - c n u
 
   if [[ -v opts[-c] ]]; then
-    zle -N "$@[-1]" _execute_cmd
-    builtin bindkey "$@"
+    zle -N ".$@[-1]" _execute_cmd
+    builtin bindkey "$@[1,-2]" ".$@[-1]"
+
   elif [[ -v opts[-n] ]]; then
     local code="$(print -b - $1)"
     local name=${(k)key[(Re)$code]}
