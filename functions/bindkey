@@ -17,10 +17,11 @@ bindkey() {
   elif [[ -v opts[-n] ]]; then
     local code="$(print -b - $1)"
     local name=${(k)key[(Re)$code]}
+
     if [[ -z $name ]]; then
       local -a matches=( "${(k@)terminfo[(Re)$code]}" )
       (( $#matches[@] > 1 )) &&
-        matches=( "$matches[(r)k*]" )
+          matches=( "$matches[(r)k*]" )
       name="$matches[1]"
       if [[ -n $name && -v commands[man] ]]; then
         local -a match mbegin mend
@@ -28,9 +29,10 @@ bindkey() {
         expl=${(SM)expl#$'\t'${name}$'\t'??$'\t'T\{$'\n'(#b)(*)$'\n'}
         expl=${${(C)match[1]%%(| function) key}//[ -]/}
         [[ -n $expl ]] &&
-          name=$expl
+            name=$expl
       fi
     fi
+
     if [[ -z $name ]]; then
       case $code in
         $'\C-@'* )
@@ -63,43 +65,24 @@ bindkey() {
       esac
     fi
     print $name
+
   elif [[ -v opts[-u] ]]; then
     local -a args=( $@ )
-    .undefined-keys.print() {
-      local -a val=()
-      local key; for key in $@; do
-        [[ $(builtin bindkey $args[@] - $key)$(builtin bindkey $args[@] -p - $key)
-            == *'undefined-key' ]] &&
+    local -a control=( {$'\0'..$'\C-B'} {$'\C-D'..$'\C-_'} $'\C-?' )
+    local -a printable=( {' '..'~'} )
+    local -a termkeys=( kbs kich1 kdch1 khome kend kpp knp kcuu1 kcub1 kcud1 kcuf1 )
+    termkeys=( ${(vn)terminfo[(I)(${(~j:|:)termkeys})]} )
+    local -a fkeys=( ${(vn)terminfo[(I)kf<1-20>]} )
+    local -a val=()
+    local key; for key in $printable $control $'\e'$^printable $'\e'$^control \
+        $termkeys $'\e'$^termkeys $fkeys $'\e'$^fkeys; do
+      [[ $(builtin bindkey $args[@] - $key)$(builtin bindkey $args[@] -p - $key)
+              == *'undefined-key' ]] &&
           val+=( ${${${${${(q+)key}//'\C-'/^}//'\\'/\\}#(|\$)[\']}%[\']} )
-      done
-      (( $#val )) &&
+    done
+    (( $#val )) &&
         print -cr - ${(q-)val}
-    }
-    {
-      local -a control=( {$'\0'..$'\C-B'} {$'\C-D'..$'\C-_'} $'\C-?' )
-      local -a printable=( {' '..'~'} )
-      local -a termkeys=( kbs kich1 kdch1 khome kend kpp knp kcuu1 kcub1 kcud1 kcuf1 )
-      termkeys=( ${(vn)terminfo[(I)(${(~j:|:)termkeys})]} )
-      local -a fkeys=( ${(vn)terminfo[(I)kf<1-20>]} )
 
-      .undefined-keys.print $printable &&
-        print
-      .undefined-keys.print $control &&
-        print
-      .undefined-keys.print $'\e'$^printable &&
-        print
-      .undefined-keys.print $'\e'$^control &&
-        print
-      .undefined-keys.print $termkeys &&
-        print
-      .undefined-keys.print $'\e'$^termkeys
-        print
-      .undefined-keys.print $fkeys &&
-        print
-      .undefined-keys.print $'\e'$^fkeys
-    } always {
-      unfunction .undefined-keys.print
-    }
   else
     builtin bindkey "$@"
   fi
