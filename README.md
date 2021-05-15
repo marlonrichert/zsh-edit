@@ -15,39 +15,41 @@ By default, Zsh's widgets <kbd>forward-word</kbd>, <kbd>backward-word</kbd>, <kb
 and <kbd>backward-kill-word</kbd> fail to stop on many of the positions that we humans see as word
 boundaries:
 ```zsh
-# ZSH default behavior 😕
+# ZSH default word stops 😕
 
 # With default $WORDCHARS:
-% yarn run test:nocoverage --filter resources/test/apps/HiboxMeet.spec.js
-  <   ><  ><   ><         ><       ><                                   >
+#     > >     >  >          >   >      >     >                        >
+% dscl . -read ~/ UserShell; git config --get status.showUntrackedFiles
+# <    < <     <  <          <   <      <     <
 # Skips/deletes _way_ too much.
 
 # With WORDCHARS=''
-% yarn run test:nocoverage --filter resources/test/apps/HiboxMeet.spec.js
-  <   ><  ><   ><           ><     ><        ><   ><   ><        ><   ><>
-# A bit better, but
-#   * does not recognize subwords ('Hibox' and 'Meet') and
-#   * forward motion often still skips/deletes too much.
+#        >       >          >   >        >   >      >                 >
+% dscl . -read ~/ UserShell; git config --get status.showUntrackedFiles
+# <       <       <          <   <        <   <      <
+# A bit better, but still not great.
 ```
 
 Zsh-Edit upgrades these widgets with better parsing rules that can find all the word boundaries
 that matter to us and makes it easily customizable through the `$WORDCHARS` parameter.
 
 ```zsh
-# With Zsh-Edit 🤗
+# Word stops with Zsh-Edit 🤗
 
 # With default $WORDCHARS:
-% yarn run test:nocoverage --filter resources/test/apps/HiboxMeet.spec.js
-  <  > < > <  > <        > <      > <       ><   ><   ><    ><  ><   >< >
+#    > >     >  >    >    > >  >      >     >      >    >        >    >
+% dscl . -read ~/ UserShell; git config --get status.showUntrackedFiles
+# <    < <     <  <   <    < <   <      <     <     <    <        <
 
 # With WORDCHARS='':
-% yarn run test:nocoverage --filter resources/test/apps/HiboxMeet.spec.js
-  <  > < > <  > <        >   <    > <       > <  > <  > <   ><  > <  > <>
+#    > > >   >  >    >    > >  >      >  >  >      >    >        >    >
+% dscl . -read ~/ UserShell; git config --get status.showUntrackedFiles
+# <    <  <    <  <   <    < <   <      < <   <      <   <        <
 
 # With WORDCHARS=' *?~\':
-% yarn run test:nocoverage --filter resources/test/apps/HiboxMeet.spec.js
-  <  ><  ><   > <        ><       ><        > <  > <  > <   ><  > <  > <>
-# Cursor to the left of space let's you start typing right away.
+#    > > >   > >     >    >    >      >  >  >      >    >        >    >
+% dscl . -read ~/ UserShell; git config --get status.showUntrackedFiles
+# <   < < <   <  <    <     <   <       <    <       <   <        <
 ```
 
 If you don't want to change your `$WORDCHARS` globally, you can instead use
@@ -59,8 +61,8 @@ which will change `$WORDCHARS` only for the widgets provided by `zsh-edit`.
 ## Clipboard Viewer
 Whenever you <kbd>yank</kbd> (<kbd>Control</kbd><kbd>Y</kbd> by default), Zsh-Edit will list the
 contents of your kill ring (including the cut buffer) below your command line. In addition,
-Zsh-Edit eliminates all duplicate kills from your kill ring. Thus, each entry listed is
- guaranteed to be unique.
+Zsh-Edit eliminates all duplicate kills from your kill ring. Thus, each entry listed is guaranteed
+to be unique.
 
 Furthermore, after using <kbd>yank</kbd>, when you use <kbd>yank-pop</kbd>
 (<kbd>Alt</kbd><kbd>Y</kbd> by default), Zsh-Edit will show you which kill is currently selected,
