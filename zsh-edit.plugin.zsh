@@ -1,5 +1,7 @@
 #!/bin/zsh
 setopt autopushd pushdminus
+zmodload zsh/complist
+
 () {
   emulate -L zsh
   typeset -gHa _edit_opts=( extendedglob NO_listbeep NO_shortloops warncreateglobal )
@@ -9,14 +11,48 @@ setopt autopushd pushdminus
   unfunction bindkey 2>/dev/null
   autoload -Uz $fdir/bindkey $fdir/_*~*.zwc
 
-  local widget
-  for widget in {forward,backward,kill,backward-kill}-word; do
-    zle -N $widget _edit_subword
+  bindkey -M emacs '^U'  backward-kill-line
+  bindkey -M emacs '^[e' redo
+
+  .beginning-of-buffer() {
+    CURSOR=0
+  }
+  .end-of-buffer() {
+    CURSOR=$#BUFFER
+  }
+  zle -N beginning-of-buffer .beginning-of-buffer
+  zle -N end-of-buffer       .end-of-buffer
+  bindkey -M emacs '^[<' beginning-of-buffer
+  bindkey -M emacs '^[>' end-of-buffer
+  bindkey -M menuselect '^[<' beginning-of-history
+  bindkey -M menuselect '^[>' end-of-history
+
+  [[ -v ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS ]] ||
+      typeset -gHa ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=()
+  local k v
+  for k v in \
+      '^[b'  backward-subword \
+      '^[^B' backward-shell-word \
+      '^[f'  forward-subword \
+      '^[^F' forward-shell-word; do
+    zle -N "$v" _edit_subword
+    bindkey -M emacs      "$k" "$v"
+    bindkey -M menuselect "$k" ".$v"
+    ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS+=( "$v" )
   done
-  for widget in yank yank-pop reverse-yank-pop; do
-    zle -N $widget _visual_yank
+  for k v in \
+      '^[^H' backward-kill-subword \
+      '^W'   backward-kill-shell-word \
+      '^[d'  kill-subword \
+      '^[^D' kill-shell-word; do
+    zle -N "$v" _edit_subword
+    bindkey -M emacs "$k" "$v"
   done
 
+  local w
+  for w in yank yank-pop reverse-yank-pop; do
+    zle -N $w _visual_yank
+  done
   bindkey -M emacs '^[Y' reverse-yank-pop
 
   zle -N _dirstack

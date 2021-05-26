@@ -1,38 +1,47 @@
 #!/bin/zsh
 emulate -L zsh; setopt $_edit_opts
 
-local wordchars
-zstyle -s ":edit:$WIDGET:" word-chars wordchars &&
-    local +h WORDCHARS="$wordchars"
-
 [[ $WIDGET == *kill-* ]] &&
-  zle -f kill
+    zle -f kill
 
 local -i end start=$CURSOR
-local subword="([[:WORD:]]##~*[[:lower:]]*[[:upper:]]*~*[[:alnum:]]*[^[:alnum:]]*)"
-local nonword='([^[:WORD:]]##)'
-if [[ $WIDGET == *backward-* ]]; then
-  (( end = start - ${(M)#LBUFFER%%($~subword|$~nonword~*[[:space:]]*[[:punct:]]*)(?|)} ))
+
+if [[ $WIDGET == *-shell-word ]]; then
+  if [[ $WIDGET == *backward-* ]]; then
+    (( end = start - ${(M)#LBUFFER%${${(@)${(Z+c+A)LBUFFER}:#\;}[-1]}*} ))
+  else
+    (( end = start + ${(M)#RBUFFER#*${${(@)${(Z+c+A)RBUFFER}:#\;}[1]}} ))
+  fi
 else
-  (( end = start + ${(M)#RBUFFER##(?|)($~subword|$~nonword~*[[:punct:]]*[[:space:]]*)} ))
+  local wordchars
+  zstyle -s ":edit:$WIDGET:" word-chars wordchars &&
+      local +h WORDCHARS="$wordchars"
+
+  local subword="([[:WORD:]]##~*[[:lower:]]*[[:upper:]]*~*[[:alnum:]]*[^[:alnum:]]*)"
+  local nonword='([^[:WORD:]]##)'
+  if [[ $WIDGET == *backward-* ]]; then
+    (( end = start - ${(M)#LBUFFER%%($~subword|$~nonword~*[[:space:]]*[[:punct:]]*)(?|)} ))
+  else
+    (( end = start + ${(M)#RBUFFER##(?|)($~subword|$~nonword~*[[:punct:]]*[[:space:]]*)} ))
+  fi
 fi
 
 (( end == start )) &&
-  return 1
+    return 1
 
 case $WIDGET in
-  *kill-*)
+  ( *kill-* )
     (( REGION_ACTIVE )) ||
-      CURSOR=$start
+        CURSOR=$start
     MARK=$end
     zle .kill-region
-    ;;
-  *backward-*)
+  ;;
+  ( *backward-* )
     zle .backward-char -n $(( start - end ))
-    ;;
-  *)
+  ;;
+  ( * )
     zle .forward-char -n $(( end - start ))
-    ;;
+  ;;
 esac
 
 return 0

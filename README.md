@@ -1,18 +1,24 @@
 # Zsh-Edit
 Zsh-Edit is a set of powerful extensions to the Zsh command line editor.
 
-## `cd` History Navigation
-Zsh-Edit adds the following keyboard shortcuts for quick directory navigation:
+## Key Bindings
+Zsh-Edit adds the following keyboard shortcuts:
 
-| key binding | action |
+| Keys | Command |
 | --- | --- |
-| <kbd>Alt</kbd><kbd>-</kbd> | Backward in dir history |
-| <kbd>Alt</kbd><kbd>=</kbd> | Forward in dir history |
-| <kbd>Alt</kbd><kbd>`</kbd> | Select from dir history |
+| <kbd>Alt</kbd><kbd>-</kbd>                   | `cd` to previous dir |
+| <kbd>Alt</kbd><kbd>=</kbd>                   | `cd` to next dir |
+| <kbd>Alt</kbd><kbd>`</kbd>                   | Select a previous dir |
+| <kbd>Alt</kbd><kbd>B</kbd>                   | Backward [subword](#subword-movement) |
+| <kbd>Alt</kbd><kbd>Control</kbd><kbd>B</kbd> | Backward shell word |
+| <kbd>Alt</kbd><kbd>F</kbd>                   | Forward [subword](#subword-movement) |
+| <kbd>Alt</kbd><kbd>Control</kbd><kbd>F</kbd> | Forward shell word |
+| <kbd>Alt</kbd><kbd>Shift</kbd><kbd>,</kbd>   | Beginning of buffer |
+| <kbd>Alt</kbd><kbd>Shift</kbd><kbd>.</kbd>   | End of buffer |
 
-## Better (Sub)Word Movement
-By default, Zsh's widgets <kbd>forward-word</kbd>, <kbd>backward-word</kbd>, <kbd>kill-word</kbd>
-and <kbd>backward-kill-word</kbd> fail to stop on many of the positions that we humans see as word
+### Subword Movement
+Zsh's widgets <kbd>forward-word</kbd>, <kbd>backward-word</kbd>, <kbd>kill-word</kbd> and
+<kbd>backward-kill-word</kbd> fail to stop on many of the positions that we humans see as word
 boundaries:
 ```zsh
 # ZSH default word stops 😕
