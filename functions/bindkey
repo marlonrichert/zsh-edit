@@ -19,6 +19,20 @@ bindkey() {
     local code="$(print -b - $1)"
     local name=${(k)key[(Re)$code]}
 
+    if [[ -z $name && $code == $'\e['[ABCDFH]* ]]; then
+      case $code in
+        $'\e[A'* ) name='Up'    ;;
+        $'\e[B'* ) name='Down'  ;;
+        $'\e[C'* ) name='Right' ;;
+        $'\e[D'* ) name='Left'  ;;
+        $'\e[F'* ) name='End'   ;;
+        $'\e[H'* ) name='Home'  ;;
+      esac
+      code="${code#$'\e['?}"
+      [[ -n "$code" ]] &&
+          name+=" + $(bindkey -n $code)"
+    fi
+
     if [[ -z $name ]]; then
       local -a matches=( "${(k@)terminfo[(Re)$code]}" )
       (( $#matches[@] > 1 )) &&
@@ -38,27 +52,27 @@ bindkey() {
       case $code in
         $'\C-@'* )
           name='Control-Space'
-          code=${code#[$'\C-@']}
+          code=${code#$'\C-@'}
           [[ -n "$code" ]] &&
-            name+=" + $(bindkey -n $code)"
+              name+=" + $(bindkey -n $code)"
           ;;
         $'\C-?'* )
-          name='Delete'
-          code=${code#[$'\C-?']}
+          name='Backspace'
+          code=${code#$'\C-?'}
           [[ -n "$code" ]] &&
-            name+=" + $(bindkey -n $code)"
+              name+=" + $(bindkey -n $code)"
           ;;
         $'\e'* )
           name="Alt"
           code="${code#$'\e'}"
           [[ -n "$code" ]] &&
-            name+="-$(bindkey -n $code)"
+              name+="-$(bindkey -n $code)"
           ;;
         [$'\C-A'-$'\C-^']* )
           name="Control-${(SM)${(Mq+)code#[$'\C-A'-$'\C-^']}%[A-^]}"
           code="${code#[$'\C-A'-$'\C-^']}"
           [[ -n "$code" ]] &&
-            name+=" + $(bindkey -n $code)"
+              name+=" + $(bindkey -n $code)"
           ;;
         * )
           name='??'
