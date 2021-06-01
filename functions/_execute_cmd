@@ -12,6 +12,8 @@ case $CONTEXT in
     case $opts in
       ( ^*@* )
         zle .push-line
+      ;|
+      ( * )
         zle -Rc
       ;|
       ( *-* )
