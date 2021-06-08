@@ -8,9 +8,9 @@ local -i end start=$CURSOR
 
 if [[ $WIDGET == *-shell-word ]]; then
   if [[ $WIDGET == *backward-* ]]; then
-    (( end = start - ${(M)#LBUFFER%${${(@)${(Z+c+A)LBUFFER}:#\;}[-1]}*} ))
+    (( end = start - ${(M)#LBUFFER%${~${(Z+c+Ab)LBUFFER}[-1]:/\;/?}*} ))
   else
-    (( end = start + ${(M)#RBUFFER#*${${(@)${(Z+c+A)RBUFFER}:#\;}[1]}} ))
+    (( end = start + ${(M)#RBUFFER#*${~${(Z+c+Ab)RBUFFER}[1]:/\;/?}} ))
   fi
 else
   local wordchars

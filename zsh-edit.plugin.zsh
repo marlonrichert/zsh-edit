@@ -55,8 +55,8 @@ zmodload zsh/complist
   done
   bindkey -M emacs '^[Y' reverse-yank-pop
 
-  zle -N _dirstack
-  bindkey -M emacs '^[`' _dirstack # Show dir stack.
+  zle -N dirstack _dirstack
+  bindkey -M emacs '^[`' dirstack # Show dir stack.
 
   zle -N _pushd
   bindkey -M emacs -c '^[-' '-pushd -1'  # Go backward one dir.

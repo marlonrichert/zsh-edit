@@ -7,7 +7,7 @@ _show_clipboard() {
   displ=( ${displ[@]:/(#m)*/${(z)MATCH}} )
   compadd -V kill-ring -d displ -QU - $CUTBUFFER $killring[@]
 
-  compstate[insert]=''
+  compstate[insert]=
   compstate[list]='list force'
   compstate[list_max]=0
   (( compstate[nmatches] > 0 ))
