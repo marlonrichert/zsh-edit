@@ -12,20 +12,20 @@ you](#look-up-key-names-listed-by-bindkey).
 | --------: | ------- |
 |     `^[-` | `cd` to previous dir |
 |     `^[=` | `cd` to next dir |
-| `` ^[` `` | Select a previous dir |
+| `` ^[` `` | Select from the last 16 dirs |
 |     `^[e` | Redo (reverse Undo) |
-|    `^U`   | Backward kill line |
-|    `^[Y`  | [Reverse yank pop](#clipboard-viewer) |
-|    `^[b`  | Backward [subword](#subword-movement) |
+|      `^U` | Backward kill line |
+|     `^[<` | Beginning of buffer |
+|     `^[>` | End of buffer |
+|     `^[Y` | [Reverse yank pop](#clipboard-viewer) |
+|     `^[b` | Backward [subword](#subword-movement) |
 |    `^[^B` | Backward shell word |
 |    `^[^H` | Backward kill [subword](#subword-movement) |
-|    `^W`   | Backward kill shell word |
-|    `^[f`  | Forward [subword](#subword-movement) |
+|      `^W` | Backward kill shell word |
+|     `^[f` | Forward [subword](#subword-movement) |
 |    `^[^F` | Forward shell word |
-|    `^[d`  | Forward kill [subword](#subword-movement) |
+|     `^[d` | Forward kill [subword](#subword-movement) |
 |    `^[^D` | Forward kill shell word |
-|    `^[<`  | Beginning of buffer |
-|    `^[>`  | End of buffer |
 
 ### Subword Movement
 Zsh's widgets <kbd>forward-word</kbd>, <kbd>backward-word</kbd>, <kbd>kill-word</kbd> and
@@ -44,12 +44,11 @@ boundaries:
 #        >       >          >   >        >   >      >                 >
 % dscl . -read ~/ UserShell; git config --get status.showUntrackedFiles
 # <       <       <          <   <        <   <      <
-# A bit better, but still not great.
+# A bit better, but skips punctuation-only words & doesn't find SubWords.
 ```
 
-Zsh-Edit upgrades these widgets with better parsing rules that can find all the word boundaries
-that matter to us and makes it easily customizable through the `$WORDCHARS` parameter.
-
+Zsh-Edit adds new widgets with better parsing rules that can find all the word boundaries that
+matter to us as humans:
 ```zsh
 # Word boundaries with Zsh-Edit 🤗
 
@@ -63,17 +62,17 @@ that matter to us and makes it easily customizable through the `$WORDCHARS` para
 % dscl . -read ~/ UserShell; git config --get status.showUntrackedFiles
 # <    <  <    <  <   <    < <   <      < <   <      <   <        <
 
-# With WORDCHARS='*?~\':
-#    > > >   > > >   >    > >  >      >  >  >      >    >        >    >
+# With WORDCHARS='*?\':
+#    > > >   >  >    >    > >  >      >  >  >      >    >        >    >
 % dscl . -read ~/ UserShell; git config --get status.showUntrackedFiles
-# <    <  <     < <   <    < <   <      < <   <      <   <        <
+# <    <  <    <  <   <    < <   <      < <   <      <   <        <
 ```
 
 If you don't want to change your `$WORDCHARS` globally, you can instead use
 ```zsh
-zstyle ':edit:*' word-chars '*?~\'
+zstyle ':edit:*' word-chars '*?\'
 ```
-which will change `$WORDCHARS` only for the widgets provided by `zsh-edit`.
+This will change `$WORDCHARS` only for the widgets provided by `zsh-edit`.
 
 ## Clipboard Viewer
 Whenever you <kbd>yank</kbd> (`^Y` by default), Zsh-Edit will list the
