@@ -3,7 +3,14 @@ autoload -Uz _show_clipboard
 zle -C ._show_clipboard list-choices _show_clipboard
 
 _visual_yank() {
-  zle -f yank
+  case $WIDGET in
+    ( *-before )
+      zle -f yankbefore
+    ;;
+    ( * )
+      zle -f yank
+    ;;
+  esac
 
   local -i len=$#killring[@]
   {
@@ -11,6 +18,10 @@ _visual_yank() {
       emulate -L zsh; setopt $_edit_opts
 
       local -aU kills=( $CUTBUFFER $killring[@] )
+
+      (( $#kills[@] )) ||
+          return
+
       shift kills
       killring=( ${(@)kills[@]:#} )
 
@@ -24,7 +35,7 @@ _visual_yank() {
         zle .$WIDGET
       fi
 
-      ZLS_COLORS="=${(zj: :)${(b)BUFFER[YANK_START+1,YANK_END]}//=/\=}=07"
+      typeset -g ZLS_COLORS="=${(zj: :)${(b)BUFFER[YANK_START+1,YANK_END]}//=/\=}=07"
     }
 
     zle ._show_clipboard

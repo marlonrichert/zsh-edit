@@ -50,7 +50,7 @@ zmodload zsh/complist
   done
 
   local w
-  for w in yank yank-pop reverse-yank-pop; do
+  for w in yank yank-pop reverse-yank-pop vi-put-before vi-put-after; do
     zle -N $w _visual_yank
   done
   bindkey -M emacs '^[Y' reverse-yank-pop
