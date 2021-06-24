@@ -75,18 +75,19 @@ zstyle ':edit:*' word-chars '*?\'
 This will change `$WORDCHARS` only for the widgets provided by `zsh-edit`.
 
 ## Clipboard Viewer
-Whenever you <kbd>yank</kbd> (`^Y` by default), Zsh-Edit will list the
-contents of your kill ring (including the cut buffer) below your command line. In addition,
+Whenever you use <kbd>yank</kbd> (`^Y` by default), <kbd>vi-put-after</kbd> (`p` in `vicmd`) or
+<kbd>vi-put-after</kbd> (`P` in `vicmd`) to paste a kill into the command line, Zsh-Edit will list
+the contents of your kill ring (including the cut buffer) below your command line. In addition,
 Zsh-Edit eliminates all duplicate kills from your kill ring. Thus, each entry listed is guaranteed
 to be unique.
 
-Furthermore, after using <kbd>yank</kbd>, when you use <kbd>yank-pop</kbd>
-(`^[y` by default), Zsh-Edit will show you which kill is currently selected,
-making it easier to cycle to the right one. To view your clipboard at any time, without modifying
-your command line, just press <kbd>yank-pop</kbd> by itself.
+Furthermore, after pasting, when you use <kbd>yank-pop</kbd> (`^[y` by default), Zsh-Edit will show
+you which kill is currently selected, making it easier to cycle to the right one. To view your
+clipboard at any time – without modifying your command line – just press <kbd>yank-pop</kbd> by
+itself.
 
 Finally, Zsh-Edit adds a new widget <kbd>reverse-yank-pop</kbd>, which lets you cycle in the
-opposite direction.
+opposite direction. It is bound to `^[Y` in the default `emacs` keymap.
 
 ## `bindkey` Extensions
 Zsh-Edit extends `bindkey` with the following new options:
