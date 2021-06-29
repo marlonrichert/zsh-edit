@@ -32,9 +32,9 @@ Zsh's widgets <kbd>forward-word</kbd>, <kbd>backward-word</kbd>, <kbd>kill-word<
 <kbd>backward-kill-word</kbd> fail to stop on many of the positions that we humans see as word
 boundaries:
 ```zsh
-# ZSH default word boundaries 😕
+# Zsh default word boundaries 😕
 
-# With default $WORDCHARS:
+# With default WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>'
 #     > >     >  >          >   >      >     >                        >
 % dscl . -read ~/ UserShell; git config --get status.showUntrackedFiles
 # <    < <     <  <          <   <      <     <
@@ -44,7 +44,7 @@ boundaries:
 #        >       >          >   >        >   >      >                 >
 % dscl . -read ~/ UserShell; git config --get status.showUntrackedFiles
 # <       <       <          <   <        <   <      <
-# A bit better, but skips punctuation-only words & doesn't find SubWords.
+# A bit better, but skips _all_ punctuation clusters & doesn't find SubWords.
 ```
 
 Zsh-Edit adds new widgets with better parsing rules that can find all the word boundaries that
@@ -52,20 +52,15 @@ matter to us as humans:
 ```zsh
 # Word boundaries with Zsh-Edit 🤗
 
-# With default $WORDCHARS:
+# With default WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>'
 #    > >     >  >    >    > >  >      >     >      >    >        >    >
 % dscl . -read ~/ UserShell; git config --get status.showUntrackedFiles
 # <    < <     <  <   <    < <   <      <     <     <    <        <
 
-# With WORDCHARS='':
+# With WORDCHARS=''
 #    > > >   >  >    >    > >  >      >  >  >      >    >        >    >
 % dscl . -read ~/ UserShell; git config --get status.showUntrackedFiles
-# <    <  <    <  <   <    < <   <      < <   <      <   <        <
-
-# With WORDCHARS='*?\':
-#    > > >   >  >    >    > >  >      >  >  >      >    >        >    >
-% dscl . -read ~/ UserShell; git config --get status.showUntrackedFiles
-# <    <  <    <  <   <    < <   <      < <   <      <   <        <
+# <   < < <    <  <   <    < <   <      < <   <      <   <        <
 ```
 
 If you don't want to change your `$WORDCHARS` globally, you can instead use

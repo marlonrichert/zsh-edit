@@ -36,8 +36,7 @@ zmodload zsh/complist
       '^[f'  forward-subword \
       '^[^F' forward-shell-word; do
     zle -N "$v" _edit_subword
-    bindkey -M emacs      "$k" "$v"
-    bindkey -M menuselect "$k" ".$v"
+    bindkey -M emacs "$k" "$v"
     ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS+=( "$v" )
   done
   for k v in \

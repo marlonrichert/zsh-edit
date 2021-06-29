@@ -8,21 +8,23 @@ local -i end start=$CURSOR
 
 if [[ $WIDGET == *-shell-word ]]; then
   if [[ $WIDGET == *backward-* ]]; then
-    (( end = start - ${(M)#LBUFFER%${~${(Z+c+Ab)LBUFFER}[-1]:/\;/?}*} ))
+    (( end = start - ${(M)#LBUFFER%${~${${(Z+c+Ab)LBUFFER}[@]:#\;}[-1]}*} ))
   else
-    (( end = start + ${(M)#RBUFFER#*${~${(Z+c+Ab)RBUFFER}[1]:/\;/?}} ))
+    (( end = start + ${(M)#RBUFFER#*${~${${(Z+c+Ab)RBUFFER}[@]:#\;}[1]}} ))
   fi
 else
   local wordchars
   zstyle -s ":edit:$WIDGET:" word-chars wordchars &&
       local +h WORDCHARS="$wordchars"
 
-  local subword="([[:WORD:]]##~*[[:lower:]]*[[:upper:]]*~*[[:alnum:]]*[^[:alnum:]]*)"
-  local nonword='([^[:WORD:]]##)'
+  local subword='([[:WORD:]]##~*[^[:upper:]]*[[:upper:]]*~*[[:alnum:]]*[^[:alnum:]]*)'
+  local word="(${subword}|[^[:WORD:][:space:]]##|[[:space:]]##)"
   if [[ $WIDGET == *backward-* ]]; then
-    (( end = start - ${(M)#LBUFFER%%($~subword|$~nonword~*[[:space:]]*[[:punct:]]*)(?|)} ))
+    local match="${(M)LBUFFER%%${~word}(?|)}"
+    (( end = start - $#match ))
   else
-    (( end = start + ${(M)#RBUFFER##(?|)($~subword|$~nonword~*[[:punct:]]*[[:space:]]*)} ))
+    local match="${(M)RBUFFER##(?|)${~word}}"
+    (( end = start + $#match ))
   fi
 fi
 
