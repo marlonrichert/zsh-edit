@@ -95,10 +95,10 @@ Zsh-Edit extends `bindkey` with the following new options:
 ### Bind commands directly to keyboard shortcuts
 What's more, when using these, your current command line will be left intact.
 ```zsh
-# By default, these will appear on screen and in history, just as if you typed
-# them & pressed Enter:
-bindkey -c '^[^[OA' 'git push'
-bindkey -c '^[^[OB' 'git fetch; git pull --autostash'
+# By default, each command will appear on screen and in history, just as if you
+# typed it & pressed Enter:
+bindkey -c '^[[5~' 'git push'
+bindkey -c '^[^[OB' 'git fetch -t && git pull --autostash'
 
 # However, you can hide commands by prepending them with +, @ or -.
 
@@ -115,6 +115,10 @@ bindkey -c '^[='    '-pushd +0'
 
 ### Look up key names listed by `bindkey`
 ```zsh
+% bindkey -n '^[[5~'
+PageUp
+% bindkey -n '^[[6~'
+PageDown
 % bindkey -n '^[^[OA'
 Alt-Up
 % bindkey -n '^[^[OB'
