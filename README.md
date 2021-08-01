@@ -1,6 +1,28 @@
 # Zsh-Edit
 Zsh-Edit is a set of powerful extensions to the Zsh command line editor.
 
+## `bind` Command
+```zsh
+# Bind shell commands directly to keyboard shortcuts.
+# What's more, when using these, your current command line will be left intact.
+bind '^Xc' 'code .'
+bind '^Xo' 'open .'
+bind '^Xl' 'git log'
+bind '^Xs' 'git status -Mu --show-stash'
+
+# List duplicate keybindings in the main keymap or another one:
+bind -d
+bind -dM viins
+
+# List unused keybindings in the main keymap or another one:
+bind -u
+bind -uM emacs
+
+# Look up the names of key codes listed by `bind` or `bindkey`:
+% bind -n '^[[5~' '^[^[OA'
+PreviousPage  Alt-UpArrow
+```
+
 ## Key Bindings
 Zsh-Edit adds the following keyboard shortcuts to the default `emacs` keymap. After sourcing
 Zsh-Edit, you can change these bindings [through the `bindkey`
@@ -83,54 +105,6 @@ itself.
 
 Finally, Zsh-Edit adds a new widget <kbd>reverse-yank-pop</kbd>, which lets you cycle in the
 opposite direction. It is bound to `^[Y` in the default `emacs` keymap.
-
-## `bindkey` Extensions
-Zsh-Edit extends `bindkey` with the following new options:
-
-### Bind commands directly to keyboard shortcuts
-What's more, when using these, your current command line will be left intact.
-```zsh
-# By default, each command will appear on screen and in history, just as if you
-# typed it & pressed Enter:
-bindkey -c '^[[5~' 'git push'
-bindkey -c '^[^[OB' 'git fetch -t && git pull --autostash'
-
-# However, you can hide commands by prepending them with +, @ or -.
-
-# Use + to print output below the current prompt and start a new command line:
-bindkey -c '^S'     '+git status --show-stash'
-
-# Use @ to leave the current prompt unmodified (if possible):
-bindkey -c '^[^L'   '@git log'
-
-# Use - to update the current prompt in place:
-bindkey -c '^[-'    '-pushd -1'
-bindkey -c '^[='    '-pushd +0'
-```
-
-### Look up key names listed by `bindkey`
-```zsh
-% bindkey -n '^[[5~'
-PageUp
-% bindkey -n '^[[6~'
-PageDown
-% bindkey -n '^[^[OA'
-Alt-Up
-% bindkey -n '^[^[OB'
-Alt-Down
-```
-
-### List unused keybindings in the main keymap or another one
-```zsh
-% bindkey -u
-% bindkey -u -M vicmd
-```
-
-### List duplicate keybindings in the main keymap or another one
-```zsh
-% bindkey -U
-% bindkey -U -M vicmd
-```
 
 ## Author
 © 2020-2021 [Marlon Richert](https://github.com/marlonrichert)

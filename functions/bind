@@ -1,0 +1,114 @@
+#!/bin/zsh
+emulate -L zsh
+zmodload zsh/complist
+zmodload zsh/parameter
+zmodload -F zsh/terminfo p:terminfo
+zmodload -F zsh/zleparameter p:widgets
+setopt $_edit_opts
+
+local -a opts mopt
+zparseopts -D -F -A opts -- d n u M:=mopt ||
+    return
+
+if [[ -v opts[-d] ]]; then
+  local -a bindings dup_bindings=() all_bindings=( "${(f)$( bindkey $mopt[@] $@ )}" )
+  local w
+  for w in "${(@ko)widgets}"; do
+    bindings=( ${(M)all_bindings:#* $w}  )
+    (( $#bindings > 1 )) &&
+        dup_bindings+=( $w $'\t'"${(pj:\t:)bindings[@]% $w}" )
+  done
+  print -raC2 $dup_bindings[@]
+
+elif [[ -v opts[-n] ]]; then
+  local -a names=() matches match mbegin mend
+  local arg code name expl
+  for arg; do
+    match=()
+    code="$( print -b - $arg )"
+    name=${(k)key[(Re)$code]}
+
+    if [[ -z $name && $code == $'\e['[ABCDFH]* ]]; then
+      case $code in
+        ( $'\e[A'* ) name='Up'    ;;
+        ( $'\e[B'* ) name='Down'  ;;
+        ( $'\e[C'* ) name='Right' ;;
+        ( $'\e[D'* ) name='Left'  ;;
+        ( $'\e[F'* ) name='End'   ;;
+        ( $'\e[H'* ) name='Home'  ;;
+      esac
+      code="${code#$'\e['?}"
+      [[ -n "$code" ]] &&
+          name+=" + $( bind $mopt[@] -n $code )"
+    fi
+
+    if [[ -z $name ]]; then
+      matches=( "${(k@)terminfo[(Re)$code]}" )
+      (( $#matches[@] > 1 )) &&
+          matches=( "$matches[(r)k*]" )
+      name="$matches[1]"
+      if [[ -n $name && -v commands[man] ]]; then
+        expl="$(< $(man --path terminfo))"
+        expl=${(SM)expl#$'\t'${name}$'\t'??$'\t'T\{$'\n'(#b)(*)$'\n'}
+        expl=${${(C)match[1]%%(| function) key}//[ -]/}
+        [[ -n $expl ]] &&
+            name=$expl
+      fi
+    fi
+
+    if [[ -z $name ]]; then
+      case $code in
+        $'\C-@'* )
+          name='Control-Space'
+          code=${code#$'\C-@'}
+          [[ -n "$code" ]] &&
+              name+=" + $( bind $mopt[@] -n $code )"
+          ;;
+        $'\C-?'* )
+          name='Backspace'
+          code=${code#$'\C-?'}
+          [[ -n "$code" ]] &&
+              name+=" + $( bind $mopt[@] -n $code )"
+          ;;
+        $'\e'* )
+          name="Alt"
+          code="${code#$'\e'}"
+          [[ -n "$code" ]] &&
+              name+="-$( bind $mopt[@] -n $code )"
+          ;;
+        [$'\C-A'-$'\C-^']* )
+          name="Control-${(SM)${(Mq+)code#[$'\C-A'-$'\C-^']}%[A-^]}"
+          code="${code#[$'\C-A'-$'\C-^']}"
+          [[ -n "$code" ]] &&
+              name+=" + $( bind $mopt[@] -n $code )"
+          ;;
+        * )
+          name='??'
+          ;;
+      esac
+    fi
+
+    names+=( $name )
+  done
+  print -rC2 -- "${(@q+)names}"
+
+elif [[ -v opts[-u] ]]; then
+  local -a val=() keys=(
+    \  {a..z} \; \' \, \. \/ \[ \] \\ \` {1..9}                      0 \- \= $'\C-?'
+    $'\e'{O,\[}{A,B,C,D,F,H} $'\e['{2,3,5,6}\~
+       {A..Z} \: \" \< \> \? \{ \} \| \~ \! \@ \# \$ \% \^ \& \* \( \) \_ \+ $'\e[Z'
+    {$'\C-@'..$'\C-_'}
+  )
+  local k
+  for k in $keys $'\e'$^keys; do
+    [[ $( bindkey $mopt[@] $@ - $k )$( bindkey $mopt[@] $@ -p - $k ) == *'undefined-key' ]] &&
+        val+=( ${${${${${(q+)k}//'\C-'/^}//'\\'/\\}#(|\$)[\']}%[\']} )
+  done
+  (( $#val )) &&
+      print -cr - ${(q-)val}
+
+else
+  bindkey $mopt[@] "$@"
+  (( $# == 2 )) &&
+      zle -N "$@[-1]" _execute_cmd
+fi

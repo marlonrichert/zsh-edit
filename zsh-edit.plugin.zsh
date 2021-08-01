@@ -7,9 +7,10 @@ zmodload zsh/complist
   typeset -gHa _edit_opts=( extendedglob NO_listbeep NO_shortloops warncreateglobal )
   setopt $_edit_opts
 
-  local fdir=${${(%):-%x}:h}/functions
-  unfunction bindkey 2>/dev/null
-  autoload -Uz $fdir/bindkey $fdir/_*~*.zwc
+  local dir=${${(%):-%x}:A:h}
+  local fdir=$dir/functions
+  typeset -gU FPATH fpath=( $dir $fpath )
+  autoload -Uz $fdir/bind $fdir/_*~*.zwc(N)
 
   bindkey -M emacs '^U'  backward-kill-line
   bindkey -M emacs '^[e' redo
@@ -58,8 +59,8 @@ zmodload zsh/complist
   bindkey -M emacs '^[`' dirstack # Show dir stack.
 
   zle -N _pushd
-  bindkey -M emacs -c '^[-' '-pushd -1'  # Go backward one dir.
-  bindkey -M emacs -c '^[=' '-pushd +0'  # Go forward one dir.
+  bind -M emacs '^[-' 'pushd -1'  # Go backward one dir.
+  bind -M emacs '^[=' 'pushd +0'  # Go forward one dir.
   bindkey -M menuselect '^[-' menu-complete
   bindkey -M menuselect '^[=' reverse-menu-complete
 }

@@ -1,0 +1,10 @@
+#compdef bind
+
+local expl
+_arguments -s -S \
+    '(-n)-M[specify keymap to select]: : _wanted keymaps expl keymap compadd -a keymaps' \
+    '(-n -u :)-d[list duplicate key bindings]' \
+    '(-M -d -u :)-n[look up key names]:*:in-string' \
+    '(-d -n :)-u[list unused key bindings]' \
+    '(-):in-string' \
+    '(-):command:_cmdstring'
