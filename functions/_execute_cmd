@@ -2,3 +2,4 @@
 zle -I
 eval "$WIDGET"
 print -rS -- "$WIDGET"  # Save it in history.
+builtin fc -W		# Write history to file (for HIST_SAVE_NO_DUPS).
