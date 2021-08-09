@@ -42,6 +42,7 @@ zmodload zsh/complist
   done
   for k v in \
       '^[^H' backward-kill-subword \
+      '^[^?' backward-kill-subword \
       '^W'   backward-kill-shell-word \
       '^[d'  kill-subword \
       '^[^D' kill-shell-word; do
