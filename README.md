@@ -1,6 +1,10 @@
 # Zsh-Edit
 Zsh-Edit is a set of powerful extensions to the Zsh command line editor.
 
+## Requirements
+* Recommended: Zsh 5.7.1 or newer
+* Minimum: Zsh 5.4.2
+
 ## `bind` Command
 ```zsh
 # Bind shell commands directly to keyboard shortcuts.
