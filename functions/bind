@@ -25,7 +25,7 @@ elif [[ -v opts[-n] ]]; then
   local arg code name expl
   for arg; do
     match=()
-    code="$( print -b - $arg )"
+    code="${(g:ceo:)arg}"
     name=${(k)key[(Re)$code]}
 
     if [[ -z $name && $code == $'\e['[ABCDFH]* ]]; then
@@ -43,6 +43,69 @@ elif [[ -v opts[-n] ]]; then
     fi
 
     if [[ -z $name ]]; then
+      case $code in
+        ( ' '* )
+          name='Space'
+        ;;
+        ( $'\C-@'* )
+          name='Control-Space'
+        ;;
+        ( [$'\C-?'$'\b']* )
+          name='Backspace'
+        ;;
+        ( $'\e'* )
+          if (( ${#code} == 1 )); then
+            name="Escape"
+          else
+            name="Alt"
+          fi
+        ;;
+        ( $'\n'* )
+          name="Enter"
+        ;;
+        ( $'\r'* )
+          name="Return"
+        ;;
+        ( $'\t'* )
+          name="Tab"
+        ;;
+        ( [$'\C-A'-$'\C-^']* )
+          name="Control-${(SM)${(Mq+)code[1]}%[A-_]}"
+        ;;
+        ( $'\C-_'* )
+          name="Control-Minus"
+        ;;
+        ( [+]* )
+          name='Plus'
+        ;;
+        ( [[:upper:]]* )
+          name="Shift-$code[1]"
+        ;;
+        ( [[:graph:]]* )
+          name="${(U)code[1]}"
+        ;;
+      esac
+      code="$code[2,-1]"
+      if [[ $code == \-* ]]; then
+        if [[ $name == Alt ]]; then
+          name+='-'
+        else
+          name+=' + '
+        fi
+        code="$code[2,-1]"
+        name+='Minus'
+      fi
+      if [[ -n "$code" ]]; then
+        if [[ $name == Alt ]]; then
+          name+='-'
+        else
+          name+=' + '
+        fi
+        name+="$( bind $mopt[@] -n $code )"
+      fi
+    fi
+
+    if [[ -z $name ]]; then
       matches=( "${(k@)terminfo[(Re)$code]}" )
       (( $#matches[@] > 1 )) &&
           matches=( "$matches[(r)k*]" )
@@ -56,41 +119,9 @@ elif [[ -v opts[-n] ]]; then
       fi
     fi
 
-    if [[ -z $name ]]; then
-      case $code in
-        $'\C-@'* )
-          name='Control-Space'
-          code=${code#$'\C-@'}
-          [[ -n "$code" ]] &&
-              name+=" + $( bind $mopt[@] -n $code )"
-          ;;
-        $'\C-?'* )
-          name='Backspace'
-          code=${code#$'\C-?'}
-          [[ -n "$code" ]] &&
-              name+=" + $( bind $mopt[@] -n $code )"
-          ;;
-        $'\e'* )
-          name="Alt"
-          code="${code#$'\e'}"
-          [[ -n "$code" ]] &&
-              name+="-$( bind $mopt[@] -n $code )"
-          ;;
-        [$'\C-A'-$'\C-^']* )
-          name="Control-${(SM)${(Mq+)code#[$'\C-A'-$'\C-^']}%[A-^]}"
-          code="${code#[$'\C-A'-$'\C-^']}"
-          [[ -n "$code" ]] &&
-              name+=" + $( bind $mopt[@] -n $code )"
-          ;;
-        * )
-          name='??'
-          ;;
-      esac
-    fi
-
     names+=( $name )
   done
-  print -rC2 -- "${(@q+)names}"
+  print -rc -- "${(@)names}"
 
 elif [[ -v opts[-u] ]]; then
   local -a val=() keys=(
