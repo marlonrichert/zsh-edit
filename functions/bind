@@ -7,7 +7,7 @@ zmodload -F zsh/zleparameter p:widgets
 setopt $_edit_opts
 
 local -a opts mopt
-zparseopts -D -F -A opts -- d n u M:=mopt ||
+zparseopts -A opts -D -F -- d n u M:=mopt ||
     return
 
 if [[ -v opts[-d] ]]; then
