@@ -1,5 +1,18 @@
 #!/bin/zsh
-zle -I
-eval "$WIDGET"
-print -rS -- "$WIDGET"  # Save it in history.
-builtin fc -W		# Write history to file (for HIST_SAVE_NO_DUPS).
+zmodload -F zsh/parameter p:functions
+
+() {
+  # Prevent ALRM traps from redrawing the prompt too early.
+  setopt localtraps
+  trap '' ALRM
+  TRAPALARM() {}
+
+  print -rS -- "$WIDGET"  # Save command in history.
+  builtin fc -W		        # Write history to file (for HIST_SAVE_NO_DUPS).
+  zle -I
+  eval "$WIDGET"
+}
+
+# Restart ALRM timeout, if any.
+(( TMOUT )) && [[ "$( trap )" == *ALRM* || -v functions[TRAPALARM] ]] &&
+    kill -ALRM $$
