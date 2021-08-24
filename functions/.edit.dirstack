@@ -1,12 +1,11 @@
 #!/bin/zsh
 zmodload zsh/complist
-autoload -Uz _dirstack_
-zle -C _dirstack_ menu-select _dirstack_
+zle -C _dirstack menu-select _edit._dirstack
 
-_dirstack() {
+.edit.dirstack() {
   setopt localoptions $_edit_opts
 
-  LBUFFER="${LBUFFER%%\~-<->}~"
+  LBUFFER="${LBUFFER%%\~([-+](<->|)|)}~"
   if [[ $WIDGET == *-plus ]]; then
     LBUFFER+='+'
   else
@@ -15,7 +14,7 @@ _dirstack() {
 
   local -a dirstack=( $dirstack[1,16] )
 
-  zle _dirstack_
+  zle _dirstack
 
   case $_lastcomp[nmatches] in
     0 )
@@ -33,4 +32,4 @@ _dirstack() {
   esac
 }
 
-_dirstack "$@"
+.edit.dirstack "$@"

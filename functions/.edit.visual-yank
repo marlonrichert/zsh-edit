@@ -1,8 +1,7 @@
 #!/bin/zsh
-autoload -Uz _show_clipboard
-zle -C ._show_clipboard list-choices _show_clipboard
+zle -C _show_clipboard list-choices _edit._show_clipboard
 
-_visual_yank.filter-duplicates() {
+.edit.visual-yank.filter-duplicates() {
   emulate -L zsh; setopt $_edit_opts
 
   local -aU kills=( $CUTBUFFER $killring[@] )
@@ -26,14 +25,14 @@ _visual_yank.filter-duplicates() {
   typeset -g ZLS_COLORS="=${(zj: :)${(b)BUFFER[YANK_START+1,YANK_END]}//=/\=}=07"
 }
 
-_visual_yank.restore-killring-size() {
+.edit.visual-yank.restore-killring-size() {
   emulate -L zsh; setopt $_edit_opts
 
   (( len > $#killring[@] )) &&
       killring+=( "${(s:.:@)${(r:$((len - $#killring[@] - 1))::.:):-}}" )
 }
 
-_visual_yank() {
+.edit.visual-yank() {
   case $WIDGET in
     ( *-before )
       zle -f yankbefore
@@ -45,11 +44,11 @@ _visual_yank() {
 
   local -i len=$#killring[@]
   {
-    _visual_yank.filter-duplicates "$@"
-    zle ._show_clipboard
+    .edit.visual-yank.filter-duplicates "$@"
+    zle _show_clipboard
   } always {
-    _visual_yank.restore-killring-size "$@"
+    .edit.visual-yank.restore-killring-size "$@"
   }
 }
 
-_visual_yank "$@"
+.edit.visual-yank "$@"

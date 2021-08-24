@@ -4,11 +4,12 @@ if [[ ! -v _comp_setup ]]; then
   compinit
 fi
 
-_dirstack_() {
+_edit._dirstack() {
   _main_complete _directory_stack
-  compstate[insert]='menu'; (( compstate[nmatches] > 1 )) ||
-    compstate[insert]='1'
+  compstate[insert]='menu'
+  (( compstate[nmatches] > 1 )) ||
+      compstate[insert]='1'
   compstate[list]='list force'
 }
 
-_dirstack_ "$@"
+_edit._dirstack "$@"
