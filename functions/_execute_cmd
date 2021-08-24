@@ -1,7 +1,7 @@
 #!/bin/zsh
 zmodload -F zsh/parameter p:functions
 
-() {
+_execute_cmd.inner() {
   # Prevent ALRM traps from redrawing the prompt too early.
   setopt localtraps
   trap '' ALRM
@@ -13,6 +13,12 @@ zmodload -F zsh/parameter p:functions
   eval "$WIDGET"
 }
 
-# Restart ALRM timeout, if any.
-(( TMOUT )) && [[ "$( trap )" == *ALRM* || -v functions[TRAPALARM] ]] &&
-    kill -ALRM $$
+_execute_cmd() {
+  _execute_cmd.inner "$@"
+
+  # Restart ALRM timeout, if any.
+  (( TMOUT )) && [[ "$( trap )" == *ALRM* || -v functions[TRAPALARM] ]] &&
+      kill -ALRM $$
+}
+
+_execute_cmd "$@"

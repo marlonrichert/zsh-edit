@@ -4,6 +4,7 @@ zmodload zsh/complist
 zmodload zsh/parameter
 zmodload -F zsh/terminfo p:terminfo
 zmodload -F zsh/zleparameter p:widgets
+autoload -Uz add-zsh-hook
 setopt $_edit_opts
 
 local -a opts mopt

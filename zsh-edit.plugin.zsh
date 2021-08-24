@@ -2,7 +2,7 @@
 setopt autopushd pushdminus
 zmodload zsh/complist
 
-() {
+zsh-edit() {
   emulate -L zsh
   typeset -gHa _edit_opts=( extendedglob NO_listbeep NO_shortloops warncreateglobal )
   setopt $_edit_opts
@@ -64,4 +64,10 @@ zmodload zsh/complist
   bind -M emacs '^[=' 'pushd +0'  # Go forward one dir.
   bindkey -M menuselect '^[-' menu-complete
   bindkey -M menuselect '^[=' reverse-menu-complete
+}
+
+{
+  zsh-edit "$@"
+} always {
+  unfunction zsh-edit
 }
