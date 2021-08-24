@@ -6,18 +6,11 @@ zle -C _dirstack_ menu-select _dirstack_
 _dirstack() {
   setopt localoptions $_edit_opts
 
-  if [[ $LASTWIDGET != $WIDGET ]]; then
-    zle .push-line
-    if [[ -o autocd ]]; then
-      LBUFFER='~'
-    else
-      LBUFFER='cd '
-    fi
-    if [[ -o pushdminus ]]; then
-      LBUFFER+='-'
-    else
-      LBUFFER+='+'
-    fi
+  LBUFFER="${LBUFFER%%\~-<->}~"
+  if [[ $WIDGET == *-plus ]]; then
+    LBUFFER+='+'
+  else
+    LBUFFER+='-'
   fi
 
   local -a dirstack=( $dirstack[1,16] )

@@ -56,8 +56,12 @@ zsh-edit() {
   done
   bindkey -M emacs '^[Y' reverse-yank-pop
 
-  zle -N dirstack _dirstack
-  bindkey -M emacs '^[`' dirstack # Show dir stack.
+  zle -N dirstack-minus _dirstack
+  zle -N dirstack-plus  _dirstack
+  bindkey -M emacs '^[_' dirstack-minus
+  bindkey -M emacs '^[+' dirstack-plus
+  bindkey -M menuselect -s '^[_' '^G^_^[_'
+  bindkey -M menuselect -s '^[+' '^G^_^[+'
 
   zle -N _pushd
   bind -M emacs '^[-' 'pushd -1'  # Go backward one dir.
