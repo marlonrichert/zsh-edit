@@ -28,46 +28,50 @@ PreviousPage  Alt-UpArrow
 ```
 
 ## Key Bindings
-Zsh-Edit adds the following keyboard shortcuts to the default `emacs` keymap. After sourcing
-Zsh-Edit, you can change these bindings [through the `bindkey`
+Zsh-Edit adds the following keyboard shortcuts to keymaps `main` and `emacs` (which are usually
+[the same](https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#index-VISUAL)). After
+sourcing Zsh-Edit, you can change these bindings through the [`bindkey`
 command](https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#Zle-Builtins).
-If you don't know what the key codes below mean, Zsh-Edit [can translate them for
-you](#look-up-key-names-listed-by-bindkey).
 
-|      Keys | Command |
-| --------: | ------- |
-|     `^[-` | `cd` to previous dir |
-|     `^[=` | `cd` to next dir |
-| `` ^[_ `` | Select from previous 16 dirs |
-| `` ^[+ `` | Select from next 16 dirs |
-|     `^[e` | Redo (reverse Undo) |
-|      `^U` | Backward kill line |
-|     `^[<` | Beginning of buffer |
-|     `^[>` | End of buffer |
-|     `^[Y` | [Reverse yank pop](#clipboard-viewer) |
-|     `^[b` | Backward [subword](#subword-movement) |
-|    `^[^B` | Backward shell word |
-|    `^[^H` | Backward kill [subword](#subword-movement) |
-|      `^W` | Backward kill shell word |
-|     `^[f` | Forward [subword](#subword-movement) |
-|    `^[^F` | Forward shell word |
-|     `^[d` | Forward kill [subword](#subword-movement) |
-|    `^[^D` | Forward kill shell word |
+| `main` | `emacs` | Command |
+| -: | -: | - |
+| <kbd>Alt</kbd><kbd>-</kbd> | | `cd` to previous dir |
+| <kbd>Shift</kbd><kbd>Alt</kbd><kbd>-</kbd> | | Select from previous 16 dirs |
+| <kbd>Alt</kbd><kbd>=</kbd> | | `cd` to next dir |
+| <kbd>Shift</kbd><kbd>Alt</kbd><kbd>=</kbd> | | Select from next 16 dirs |
+| | <kbd>Alt</kbd><kbd>E</kbd> | Redo (reverse Undo) |
+| | <kbd>Alt</kbd><kbd>Y</kbd> | [Reverse yank pop](#clipboard-viewer) |
+| <kbd>Ctrl</kbd><kbd>←</kbd> | <kbd>Alt</kbd><kbd>B</kbd> | Backward [subword](#subword-movement) |
+| <kbd>Alt</kbd><kbd>←</kbd> | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>B</kbd> | Backward shell word |
+| <kbd>Ctrl</kbd><kbd>→</kbd> | <kbd>Alt</kbd><kbd>F</kbd> | Forward [subword](#subword-movement) |
+| <kbd>Alt</kbd><kbd>→</kbd> | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>F</kbd> | Forward shell word |
+| <kbd>Backspace</kbd> | | Backward delete character |
+| <kbd>Ctrl</kbd><kbd>Backspace</kbd> | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>H</kbd> | Backward kill [subword](#subword-movement) |
+| <kbd>Alt</kbd><kbd>Backspace</kbd> | <kbd>Ctrl</kbd><kbd>W</kbd> | Backward kill shell word |
+| <kbd>Delete</kbd> | | Forward delete character |
+| <kbd>Ctrl</kbd><kbd>Delete</kbd> | <kbd>Alt</kbd><kbd>D</kbd> | Forward kill [subword](#subword-movement) |
+| <kbd>Alt</kbd><kbd>Delete</kbd> | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>D</kbd> | Forward kill shell word |
+| <kbd>Home</kbd> | <kbd>Ctrl</kbd><kbd>A</kbd> | Beginning of line |
+| <kbd>Shift</kbd><kbd>Home</kbd> | <kbd>Ctrl</kbd><kbd>U</kbd> | Backward kill line |
+| <kbd>End</kbd> | <kbd>Ctrl</kbd><kbd>E</kbd> | End of line |
+| <kbd>Shift</kbd><kbd>End</kbd> | <kbd>Ctrl</kbd><kbd>K</kbd> | Forward kill line |
+| <kbd>Ctrl</kbd><kbd>Home</kbd> | <kbd>Shift</kbd><kbd>Alt</kbd><kbd>,</kbd> | Beginning of buffer |
+| <kbd>Ctrl</kbd><kbd>End</kbd> | <kbd>Shift</kbd><kbd>Alt</kbd><kbd>.</kbd> | End of buffer |
 
 ## Clipboard Viewer
-Whenever you use <kbd>yank</kbd> (`^Y` by default), <kbd>vi-put-after</kbd> (`p` in `vicmd`) or
+Whenever you use <kbd>yank</kbd> (`^Y` in `emacs`), <kbd>vi-put-after</kbd> (`p` in `vicmd`) or
 <kbd>vi-put-after</kbd> (`P` in `vicmd`) to paste a kill into the command line, Zsh-Edit will list
 the contents of your kill ring (including the cut buffer) below your command line. In addition,
 Zsh-Edit eliminates all duplicate kills from your kill ring. Thus, each entry listed is guaranteed
 to be unique.
 
-Furthermore, after pasting, when you use <kbd>yank-pop</kbd> (`^[y` by default), Zsh-Edit will show
+Furthermore, after pasting, when you use <kbd>yank-pop</kbd> (`^[y` in `emacs`), Zsh-Edit will show
 you which kill is currently selected, making it easier to cycle to the right one. To view your
 clipboard at any time – without modifying your command line – just press <kbd>yank-pop</kbd> by
 itself.
 
 Finally, Zsh-Edit adds a new widget <kbd>reverse-yank-pop</kbd>, which lets you cycle in the
-opposite direction. It is bound to `^[Y` in the default `emacs` keymap.
+opposite direction. It is bound to `^[Y` in the `main` keymap.
 
 ## Subword Movement
 Zsh's widgets <kbd>forward-word</kbd>, <kbd>backward-word</kbd>, <kbd>kill-word</kbd> and

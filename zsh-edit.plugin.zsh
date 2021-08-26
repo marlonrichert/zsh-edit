@@ -12,9 +12,6 @@ zsh-edit() {
   typeset -gU FPATH fpath=( $dir $fpath )
   autoload -Uz $fdir/bind $fdir/[._]edit.*~*.zwc(DN)
 
-  bindkey -M emacs '^U'  backward-kill-line
-  bindkey -M emacs '^[e' redo
-
   .beginning-of-buffer() {
     CURSOR=0
   }
@@ -23,50 +20,63 @@ zsh-edit() {
   }
   zle -N {,.}beginning-of-buffer
   zle -N {,.}end-of-buffer
-  bindkey -M emacs '^[<' beginning-of-buffer
-  bindkey -M emacs '^[>' end-of-buffer
-  bindkey -M menuselect '^[<' beginning-of-history
-  bindkey -M menuselect '^[>' end-of-history
+
+  local widget
+  for widget in yank yank-pop reverse-yank-pop vi-put-before vi-put-after; do
+    zle -N $widget .edit.visual-yank
+  done
+  for widget in {{back,for}ward,{backward-,}kill}-{sub,shell-}word; do
+    zle -N "$widget" .edit.subword
+  done
 
   [[ -v ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS ]] ||
-      typeset -gHa ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=()
-  local k v
-  for k v in \
-      '^[b'  backward-subword \
-      '^[^B' backward-shell-word \
-      '^[f'  forward-subword \
-      '^[^F' forward-shell-word; do
-    zle -N "$v" .edit.subword
-    bindkey -M emacs "$k" "$v"
-    ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS+=( "$v" )
-  done
-  for k v in \
-      '^[^H' backward-kill-subword \
-      '^[^?' backward-kill-subword \
-      '^W'   backward-kill-shell-word \
-      '^[d'  kill-subword \
-      '^[^D' kill-shell-word; do
-    zle -N "$v" .edit.subword
-    bindkey -M emacs "$k" "$v"
-  done
+    typeset -gHa ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=()
+  ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS+=(
+      backward-subword backward-shell-word forward-subword forward-shell-word
+  )
 
-  local w
-  for w in yank yank-pop reverse-yank-pop vi-put-before vi-put-after; do
-    zle -N $w .edit.visual-yank
-  done
+  .edit.bind() {
+    local code widget=$1 emacs=$2
+    shift 2
+    bindkey -M emacs  "$emacs"      "$widget"
+    for code do
+      bindkey "$code" "$widget"
+    done
+  }
+
+  bindkey    '^?' backward-delete-char
+  bindkey '^[[3~' delete-char
+  .edit.bind backward-subword         '^[b'   '^[[1;5D'
+  .edit.bind backward-shell-word      '^[^B'  '^[[1;3D' '^[^[[D'  '^[^[OD'
+  .edit.bind forward-subword          '^[f'   '^[[1;5C'
+  .edit.bind forward-shell-word       '^[^F'  '^[[1;3C' '^[^[[C'  '^[^[OC'
+  .edit.bind backward-kill-subword    '^[^H'  '^H'
+  .edit.bind backward-kill-shell-word '^W'    '^[^?'
+  .edit.bind kill-subword             '^[d'   '^[[3;5~'
+  .edit.bind kill-shell-word          '^[^D'  '^[[3;3~' '^[^[[3~'
+  .edit.bind beginning-of-line        '^A'    '^[[H'    '^[OH'
+  .edit.bind end-of-line              '^E'    '^[[F'    '^[OF'
+  .edit.bind kill-line                '^K'    '^[[1;2F'
+  .edit.bind backward-kill-line       '^U'    '^[[1;2H'
+  .edit.bind end-of-buffer            '^[>'   '^[[1;5F'
+  .edit.bind beginning-of-buffer      '^[<'   '^[[1;5H'
+
+  unfunction .edit.bind
+
+  bindkey -M emacs '^[e' redo
   bindkey -M emacs '^[Y' reverse-yank-pop
+
+  bind '^[-' 'pushd -1'
+  bind '^[=' 'pushd +0'
+  bindkey -M menuselect '^[-' menu-complete
+  bindkey -M menuselect '^[=' reverse-menu-complete
 
   zle -N dirstack-minus .edit.dirstack
   zle -N dirstack-plus  .edit.dirstack
-  bindkey -M emacs '^[_' dirstack-minus
-  bindkey -M emacs '^[+' dirstack-plus
+  bindkey '^[_' dirstack-minus
+  bindkey '^[+' dirstack-plus
   bindkey -M menuselect -s '^[_' '^G^_^[_'
   bindkey -M menuselect -s '^[+' '^G^_^[+'
-
-  bind -M emacs '^[-' 'pushd -1'  # Go backward one dir.
-  bind -M emacs '^[=' 'pushd +0'  # Go forward one dir.
-  bindkey -M menuselect '^[-' menu-complete
-  bindkey -M menuselect '^[=' reverse-menu-complete
 }
 
 {
