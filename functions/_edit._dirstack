@@ -10,6 +10,7 @@ _edit._dirstack() {
   (( compstate[nmatches] > 1 )) ||
       compstate[insert]='1'
   compstate[list]='list force'
+  typeset -g MENUMODE=search-forward
 }
 
 _edit._dirstack "$@"
