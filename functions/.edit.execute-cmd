@@ -1,24 +1,20 @@
 #!/bin/zsh
 zmodload -F zsh/parameter p:functions
 
-.edit.execute-cmd.inner() {
+() {
   # Prevent ALRM traps from redrawing the prompt too early.
   setopt localtraps
+  unfunction TRAPALRM 2> /dev/null
   trap '' ALRM
-  TRAPALARM() {}
 
-  print -rS -- "$WIDGET"  # Save command in history.
-  builtin fc -W		        # Write history to file (for HIST_SAVE_NO_DUPS).
-  zle -I
-  eval "$WIDGET"
+  () {
+    print -rS -- "$WIDGET"  # Save command in history.
+    builtin fc -W           # Write history to file (for HIST_SAVE_NO_DUPS).
+    zle -I
+    eval "$WIDGET"
+  }
 }
 
-.edit.execute-cmd() {
-  .edit.execute-cmd.inner "$@"
-
-  # Restart ALRM timeout, if any.
-  (( TMOUT )) && [[ "$( trap )" == *ALRM* || -v functions[TRAPALARM] ]] &&
-      kill -ALRM $$
-}
-
-.edit.execute-cmd "$@"
+# Restart ALRM timeout, if any.
+(( TMOUT )) &&
+    kill -ALRM $$
