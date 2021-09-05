@@ -1,20 +1,18 @@
 #!/bin/zsh
-zmodload -F zsh/parameter p:functions
+autoload -Uz add-zle-hook-widget
+add-zle-hook-widget -d line-init "$WIDGET"
 
-() {
-  # Prevent ALRM traps from redrawing the prompt too early.
-  setopt localtraps
-  unfunction TRAPALRM 2> /dev/null
-  trap '' ALRM
-
-  () {
-    print -rS -- "$WIDGET"  # Save command in history.
-    builtin fc -W           # Write history to file (for HIST_SAVE_NO_DUPS).
-    zle -I
-    eval "$WIDGET"
-  }
-}
-
-# Restart ALRM timeout, if any.
-(( TMOUT )) &&
-    kill -ALRM $$
+case $CONTEXT in
+  ( start )   # PS1
+    zle .push-line
+    BUFFER="$WIDGET"
+    zle .accept-line
+  ;;
+  ( cont )    # PS2
+    add-zle-hook-widget line-init "$WIDGET"
+    zle .push-line-or-edit
+  ;;
+  ( * )
+    return 1
+  ;;
+esac
