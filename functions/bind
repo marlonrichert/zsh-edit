@@ -22,107 +22,90 @@ if [[ -v opts[-d] ]]; then
   print -raC2 $dup_bindings[@]
 
 elif [[ -v opts[-n] ]]; then
-  local -a names=() matches match mbegin mend
-  local arg code name expl
-  for arg; do
-    match=()
-    code="${(g:ceo:)arg}"
-    name=${(k)key[(Re)$code]}
-
-    if [[ -z $name && $code == $'\e['[ABCDFH]* ]]; then
-      case $code in
-        ( $'\e[A'* ) name='Up'    ;;
-        ( $'\e[B'* ) name='Down'  ;;
-        ( $'\e[C'* ) name='Right' ;;
-        ( $'\e[D'* ) name='Left'  ;;
-        ( $'\e[F'* ) name='End'   ;;
-        ( $'\e[H'* ) name='Home'  ;;
-      esac
-      code="${code#$'\e['?}"
-      [[ -n "$code" ]] &&
-          name+=" + $( bind $mopt[@] -n $code )"
-    fi
-
-    if [[ -z $name ]]; then
-      case $code in
-        ( ' '* )
-          name='Space'
-        ;;
-        ( $'\C-@'* )
-          name='Control-Space'
-        ;;
-        ( [$'\C-?'$'\b']* )
-          name='Backspace'
-        ;;
-        ( $'\e'* )
-          if (( ${#code} == 1 )); then
-            name="Escape"
-          else
-            name="Alt"
-          fi
-        ;;
-        ( $'\n'* )
-          name="Enter"
-        ;;
-        ( $'\r'* )
-          name="Return"
-        ;;
-        ( $'\t'* )
-          name="Tab"
-        ;;
-        ( [$'\C-A'-$'\C-^']* )
-          name="Control-${(SM)${(Mq+)code[1]}%[A-_]}"
-        ;;
-        ( $'\C-_'* )
-          name="Control-Minus"
-        ;;
-        ( [+]* )
-          name='Plus'
-        ;;
-        ( [[:upper:]]* )
-          name="Shift-$code[1]"
-        ;;
-        ( [[:graph:]]* )
-          name="${(U)code[1]}"
-        ;;
-      esac
-      code="$code[2,-1]"
-      if [[ $code == \-* ]]; then
-        if [[ $name == Alt ]]; then
-          name+='-'
-        else
+  local -A names=()
+  local -a match=() mbegin=() mend=()
+  local key= code= name= expl=
+  for key; do
+    match=() name= code="${(g:ceo:)key}"
+    while [[ -n $code ]]; do
+      [[ -n $name && $name != *- ]] &&
           name+=' + '
-        fi
-        code="$code[2,-1]"
-        name+='Minus'
-      fi
-      if [[ -n "$code" ]]; then
-        if [[ $name == Alt ]]; then
+      case $code in
+        ( (#b)($'\e'[\[O]([ABCDFH]))* )
+          case $match[2] in
+            ( A ) name+='Up' ;;
+            ( B ) name+='Down' ;;
+            ( C ) name+='Right' ;;
+            ( D ) name+='Left' ;;
+            ( E ) name+='End' ;;
+            ( H ) name+='Home' ;;
+            ( Z ) name+='Shift-Tab' ;;
+          esac
+        ;;
+        ( (#b)($'\e['([56])\~)* )
+          case $match[2] in
+            ( 5 ) name+='PageUp' ;;
+            ( 6 ) name+='PageDown' ;;
+          esac
+        ;;
+        ( (#b)($'\e'(\[[156]\;|O)(<2-16>)([ABCDFH~]))* )
+          case $match[3] in
+            (  2 ) name+='Shift' ;;
+            (  3 ) name+='Alt' ;;
+            (  4 ) name+='Shift-Alt' ;;
+            (  5 ) name+='Control' ;;
+            (  6 ) name+='Shift-Control' ;;
+            (  7 ) name+='Alt-Control' ;;
+            (  8 ) name+='Shift-Alt-Control' ;;
+            (  9 ) name+='Meta' ;;
+            ( 10 ) name+='Meta-Shift' ;;
+            ( 11 ) name+='Meta-Alt' ;;
+            ( 12 ) name+='Meta-Alt-Shift' ;;
+            ( 13 ) name+='Meta-Ctrl' ;;
+            ( 14 ) name+='Meta-Ctrl-Shift' ;;
+            ( 15 ) name+='Meta-Ctrl-Alt' ;;
+            ( 16 ) name+='Meta-Ctrl-Alt-Shift' ;;
+          esac
           name+='-'
-        else
-          name+=' + '
-        fi
-        name+="$( bind $mopt[@] -n $code )"
-      fi
-    fi
-
-    if [[ -z $name ]]; then
-      matches=( "${(k@)terminfo[(Re)$code]}" )
-      (( $#matches[@] > 1 )) &&
-          matches=( "$matches[(r)k*]" )
-      name="$matches[1]"
-      if [[ -n $name && -v commands[man] ]]; then
-        expl="$(< $(man --path terminfo))"
-        expl=${(SM)expl#$'\t'${name}$'\t'??$'\t'T\{$'\n'(#b)(*)$'\n'}
-        expl=${${(C)match[1]%%(| function) key}//[ -]/}
-        [[ -n $expl ]] &&
-            name=$expl
-      fi
-    fi
-
-    names+=( $name )
+          case $match[4] in
+            ( A ) name+='Up'    ;;
+            ( B ) name+='Down'  ;;
+            ( C ) name+='Right' ;;
+            ( D ) name+='Left'  ;;
+            ( F ) name+='End'   ;;
+            ( H ) name+='Home'  ;;
+            ( \~ )
+              case $match[2] in
+                ( '[5;' ) name+='PageUp' ;;
+                ( '[6;' ) name+='PageDown' ;;
+              esac
+            ;;
+          esac
+        ;;
+        ( (#b)(\+)*       ) name+='Plus' ;;
+        ( (#b)(\-)*       ) name+='Minus' ;;
+        ( (#b)($'\C-_')*  ) name+="Control-Minus" ;;
+        ( (#b)(\ )*       ) name+='Space' ;;
+        ( (#b)($'\C-@')*  ) name+='Control-Space' ;;
+        ( (#b)($'\C-?')*  ) name+='Backspace' ;;
+        ( (#b)($'\b')*    ) name+='Control-Backspace' ;;
+        ( (#b)($'\n')*    ) name+="Enter" ;;
+        ( (#b)($'\r')*    ) name+="Return" ;;
+        ( (#b)($'\t')*    ) name+="Tab" ;;
+        ( (#b)($'\e')     ) name+="Escape" ;;
+        ( (#b)($'\e')*    ) name+="Alt-" ;;
+        ( (#b)([$'\C-A'-$'\C-^'])* ) name+="Control-${(SM)${(q+)match[1]}%[A-_]}" ;;
+        ( (#b)([[:upper:]])* ) name+="Shift-$match[1]" ;;
+        ( (#b)([[:graph:]])* ) name+="${(U)match[1]}" ;;
+        ( * )
+          name+='??'
+        ;;
+      esac
+      code="${code#$match[1]}"
+    done
+    names["$key"]=$name
   done
-  print -rc -- "${(@)names}"
+  print -rl -- ${${(fn)"$( print -raC2 -- "${(kv@)names}" )"}[@]%%[[:space:]]#}
 
 elif [[ -v opts[-u] ]]; then
   local -a val=() keys=(
@@ -142,7 +125,7 @@ elif [[ -v opts[-u] ]]; then
 else
   bindkey $mopt[@] "$@"
   while (( $# >= 2 )); do
-      zle -N "$@[-1]" .edit.execute-cmd
+    zle -N "$@[-1]" .edit.execute-cmd
     shift -p 2
   done
 fi

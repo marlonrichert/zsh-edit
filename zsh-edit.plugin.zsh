@@ -48,16 +48,16 @@ zsh-edit() {
   .edit.bind backward-shell-word      '^[^B'  '^[[1;3D' '^[^[[D'  '^[^[OD'
   .edit.bind forward-subword          '^[f'   '^[[1;5C'
   .edit.bind forward-shell-word       '^[^F'  '^[[1;3C' '^[^[[C'  '^[^[OC'
-  .edit.bind backward-kill-subword    '^[^H'  '^H'
-  .edit.bind backward-kill-shell-word '^W'    '^[^?'
+  .edit.bind backward-kill-subword    '^[^H'  '^H'      '^[[27;5;8~'
+  .edit.bind backward-kill-shell-word '^W'    '^[^?'    '^[[27;3;8~'
   .edit.bind kill-subword             '^[d'   '^[[3;5~'
   .edit.bind kill-shell-word          '^[^D'  '^[[3;3~' '^[^[[3~'
   .edit.bind beginning-of-line        '^A'    '^[[H'    '^[OH'
   .edit.bind end-of-line              '^E'    '^[[F'    '^[OF'
-  .edit.bind kill-line                '^K'    '^[[1;2F'
-  .edit.bind backward-kill-line       '^U'    '^[[1;2H'
-  .edit.bind end-of-buffer            '^[>'   '^[[1;5F'
-  .edit.bind beginning-of-buffer      '^[<'   '^[[1;5H'
+  .edit.bind kill-line                '^K'    '^[[1;2F' '^[O2F'
+  .edit.bind backward-kill-line       '^U'    '^[[1;2H' '^[O2H'
+  .edit.bind end-of-buffer            '^[>'   '^[[1;5F' '^[O5F'
+  .edit.bind beginning-of-buffer      '^[<'   '^[[1;5H' '^[O5H'
 
   unfunction .edit.bind
 
