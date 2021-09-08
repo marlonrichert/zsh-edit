@@ -141,6 +141,8 @@ elif [[ -v opts[-u] ]]; then
 
 else
   bindkey $mopt[@] "$@"
-  (( $# == 2 )) &&
+  while (( $# >= 2 )); do
       zle -N "$@[-1]" .edit.execute-cmd
+    shift -p 2
+  done
 fi

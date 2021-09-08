@@ -9,10 +9,11 @@ Zsh-Edit is a set of powerful extensions to the Zsh command line editor.
 ```zsh
 # Bind shell commands directly to keyboard shortcuts.
 # What's more, when using these, your current command line will be left intact.
-bind '^Xc' 'code .'
-bind '^Xo' 'open .'
-bind '^Xl' 'git log'
-bind '^Xs' 'git status -Mu --show-stash'
+bind \
+    '^[c' 'code .' \
+    '^[o' 'open .' \
+    '^[l' 'git log' \
+    '^[s' 'git status -Mu --show-stash'
 
 # List duplicate keybindings in the main keymap or another one:
 bind -d

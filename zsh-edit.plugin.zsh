@@ -36,16 +36,14 @@ zsh-edit() {
   )
 
   .edit.bind() {
-    local code widget=$1 emacs=$2
+    local widget=$1 emacs=$2
     shift 2
-    bindkey -M emacs  "$emacs"      "$widget"
-    for code do
-      bindkey "$code" "$widget"
-    done
+    bindkey -M emacs "$emacs" "$widget"
+    bindkey "${@:^^widget}"
   }
 
-  bindkey    '^?' backward-delete-char
-  bindkey '^[[3~' delete-char
+  bindkey  '^?' backward-delete-char  '^[[3~' delete-char
+
   .edit.bind backward-subword         '^[b'   '^[[1;5D'
   .edit.bind backward-shell-word      '^[^B'  '^[[1;3D' '^[^[[D'  '^[^[OD'
   .edit.bind forward-subword          '^[f'   '^[[1;5C'
@@ -63,20 +61,15 @@ zsh-edit() {
 
   unfunction .edit.bind
 
-  bindkey -M emacs '^[e' redo
-  bindkey -M emacs '^[Y' reverse-yank-pop
+  bindkey -M emacs  '^[e' redo  '^[Y' reverse-yank-pop
 
-  bind '^[-' 'pushd -1'
-  bind '^[=' 'pushd +0'
-  bindkey -M menuselect '^[-' menu-complete
-  bindkey -M menuselect '^[=' reverse-menu-complete
+  bind                  '^[-' 'pushd -1'      '^[=' 'pushd +0'
+  bindkey -M menuselect '^[-' menu-complete   '^[=' reverse-menu-complete
 
   zle -N dirstack-minus .edit.dirstack
   zle -N dirstack-plus  .edit.dirstack
-  bindkey '^[_' dirstack-minus
-  bindkey '^[+' dirstack-plus
-  bindkey -M menuselect -s '^[_' '^G^_^[_'
-  bindkey -M menuselect -s '^[+' '^G^_^[+'
+  bindkey                   '^[_' dirstack-minus  '^[+' dirstack-plus
+  bindkey -M menuselect -s  '^[_' '^G^_^[_'       '^[+' '^G^_^[+'
 }
 
 {
