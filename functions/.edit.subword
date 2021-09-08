@@ -1,16 +1,31 @@
 #!/bin/zsh
 emulate -L zsh; setopt $_edit_opts
 
-[[ $WIDGET == *kill-* ]] &&
-    zle -f kill
-
-local -i end start=$CURSOR
+if [[ $WIDGET == *kill-* ]]; then
+  zle -f kill
+  (( REGION_ACTIVE )) ||
+      MARK=$CURSOR
+fi
 
 if [[ $WIDGET == *-shell-word ]]; then
-  if [[ $WIDGET == *backward-* ]]; then
-    (( end = start - ${(M)#LBUFFER%${~${${(Z+c+Ab)LBUFFER}[@]:#\;}[-1]}*} ))
+  local w=
+  if [[ $WIDGET == *backward* ]]; then
+    local -a words=( ${(Z+cn+)LBUFFER} )
+    while [[ -z $w && $#words[@] -gt 0 ]]; do
+      w=${(M)LBUFFER%$words[-1]*}
+      shift -p words
+    done
+    (( CURSOR -= $#w ))
   else
-    (( end = start + ${(M)#RBUFFER#*${~${${(Z+c+Ab)RBUFFER}[@]:#\;}[1]}} ))
+    # We can't split $RBUFFER on words, because that usually doesn't parse correctly.
+    local -a words=( ${(Z+cn+)BUFFER} ) lwords=( ${(Z+cn+)LBUFFER} )
+    words=( $words[$#lwords[@],-1] )
+    words[1]=${words[1]#$lwords[-1]}
+    while [[ -z $w && $#words[@] -gt 0 ]]; do
+      w=${(M)RBUFFER#*$words[1]}
+      shift words
+    done
+    (( CURSOR += $#w ))
   fi
 else
   local wordchars
@@ -20,30 +35,13 @@ else
   local subword='([[:WORD:]]##~*[^[:upper:]]*[[:upper:]]*~*[[:alnum:]]*[^[:alnum:]]*)'
   local word="(${subword}|[^[:WORD:][:space:]]##|[[:space:]]##)"
   if [[ $WIDGET == *backward-* ]]; then
-    local match="${(M)LBUFFER%%${~word}(?|)}"
-    (( end = start - $#match ))
+    (( CURSOR -= ${(M)#LBUFFER%%${~word}(?|)} ))
   else
-    local match="${(M)RBUFFER##(?|)${~word}}"
-    (( end = start + $#match ))
+    (( CURSOR += ${(M)#RBUFFER##(?|)${~word}} ))
   fi
 fi
 
-(( end == start )) &&
-    return 1
-
-case $WIDGET in
-  ( *kill-* )
-    (( REGION_ACTIVE )) ||
-        CURSOR=$start
-    MARK=$end
+[[ $WIDGET == *kill-* ]] &&
     zle .kill-region
-  ;;
-  ( *backward-* )
-    zle .backward-char -n $(( start - end ))
-  ;;
-  ( * )
-    zle .forward-char -n $(( end - start ))
-  ;;
-esac
 
 return 0
