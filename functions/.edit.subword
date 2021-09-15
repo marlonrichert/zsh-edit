@@ -10,7 +10,7 @@ fi
 if [[ $WIDGET == *-shell-word ]]; then
   local w=
   if [[ $WIDGET == *backward* ]]; then
-    local -a words=( ${(Z+cn+)LBUFFER} )
+    local -a words=( ${${(z)LBUFFER}:#\;} )
     while [[ -z $w && $#words[@] -gt 0 ]]; do
       w=${(M)LBUFFER%$words[-1]*}
       shift -p words
@@ -18,7 +18,7 @@ if [[ $WIDGET == *-shell-word ]]; then
     (( CURSOR -= $#w ))
   else
     # We can't split $RBUFFER on words, because that usually doesn't parse correctly.
-    local -a words=( ${(Z+cn+)BUFFER} ) lwords=( ${(Z+cn+)LBUFFER} )
+    local -a words=( ${${(z)BUFFER}:#\;} ) lwords=( ${${(z)LBUFFER}:#\;} )
     words=( $words[$#lwords[@],-1] )
     words[1]=${words[1]#$lwords[-1]}
     while [[ -z $w && $#words[@] -gt 0 ]]; do
