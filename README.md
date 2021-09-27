@@ -30,34 +30,39 @@ PreviousPage  Alt-UpArrow
 
 ## Key Bindings
 Zsh-Edit adds the following keyboard shortcuts to keymaps `main` and `emacs` (which are usually
-[the same](https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#index-VISUAL)). After
-sourcing Zsh-Edit, you can change these bindings through the [`bindkey`
-command](https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#Zle-Builtins).
+[the same](https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#index-VISUAL)).
 
-| `main` | `emacs` | Command |
-| -: | -: | - |
-| <kbd>Alt</kbd><kbd>-</kbd> | | `cd` to previous dir |
-| <kbd>Shift</kbd><kbd>Alt</kbd><kbd>-</kbd> | | Select from previous 16 dirs |
-| <kbd>Alt</kbd><kbd>=</kbd> | | `cd` to next dir |
-| <kbd>Shift</kbd><kbd>Alt</kbd><kbd>=</kbd> | | Select from next 16 dirs |
-| | <kbd>Alt</kbd><kbd>E</kbd> | Redo (reverse Undo) |
-| | <kbd>Alt</kbd><kbd>Y</kbd> | [Reverse yank pop](#clipboard-viewer) |
-| <kbd>Ctrl</kbd><kbd>←</kbd> | <kbd>Alt</kbd><kbd>B</kbd> | Backward [subword](#subword-movement) |
-| <kbd>Alt</kbd><kbd>←</kbd> | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>B</kbd> | Backward shell word |
-| <kbd>Ctrl</kbd><kbd>→</kbd> | <kbd>Alt</kbd><kbd>F</kbd> | Forward [subword](#subword-movement) |
-| <kbd>Alt</kbd><kbd>→</kbd> | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>F</kbd> | Forward shell word |
-| <kbd>Backspace</kbd> | | Backward delete character |
-| <kbd>Ctrl</kbd><kbd>Backspace</kbd> | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>H</kbd> | Backward kill [subword](#subword-movement) |
-| <kbd>Alt</kbd><kbd>Backspace</kbd> | <kbd>Ctrl</kbd><kbd>W</kbd> | Backward kill shell word |
-| <kbd>Delete</kbd> | | Forward delete character |
-| <kbd>Ctrl</kbd><kbd>Delete</kbd> | <kbd>Alt</kbd><kbd>D</kbd> | Forward kill [subword](#subword-movement) |
-| <kbd>Alt</kbd><kbd>Delete</kbd> | <kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>D</kbd> | Forward kill shell word |
-| <kbd>Home</kbd> | <kbd>Ctrl</kbd><kbd>A</kbd> | Beginning of line |
-| <kbd>Shift</kbd><kbd>Home</kbd> | <kbd>Ctrl</kbd><kbd>U</kbd> | Backward kill line |
-| <kbd>End</kbd> | <kbd>Ctrl</kbd><kbd>E</kbd> | End of line |
-| <kbd>Shift</kbd><kbd>End</kbd> | <kbd>Ctrl</kbd><kbd>K</kbd> | Forward kill line |
-| <kbd>Ctrl</kbd><kbd>Home</kbd> | <kbd>Shift</kbd><kbd>Alt</kbd><kbd>,</kbd> | Beginning of buffer |
-| <kbd>Ctrl</kbd><kbd>End</kbd> | <kbd>Shift</kbd><kbd>Alt</kbd><kbd>.</kbd> | End of buffer |
+* You can customize these with [Zsh's `bindkey`
+  command](https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#Zle-Builtins),
+  _after_ sourcing Zsh-Edit.
+* Not all terminals support all key bindings.
+
+|Command|`emacs`|`main`||
+|-|-:|-:|-:
+|Redo (reverse Undo)|<kbd>Alt</kbd><kbd>E</kbd>
+|[Reverse yank pop](#clipboard-viewer)|<kbd>Alt</kbd><kbd>Y</kbd>
+|`cd` to previous dir|<kbd>Alt</kbd><kbd>-</kbd>
+|Select from previous 16 dirs|<kbd>Shift</kbd><kbd>Alt</kbd><kbd>-</kbd>
+|`cd` to next dir|<kbd>Alt</kbd><kbd>=</kbd>
+|Select from next 16 dirs|<kbd>Shift</kbd><kbd>Alt</kbd><kbd>=</kbd>
+||
+|Backward [subword](#subword-movement)|<kbd>Alt</kbd><kbd>B</kbd>|<kbd>Ctrl</kbd><kbd>←</kbd>|<kbd>Alt</kbd><kbd>←</kbd>
+|Backward shell word|<kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>B</kbd>|<kbd>Ctrl</kbd><kbd>↑</kbd>|<kbd>Alt</kbd><kbd>↑</kbd>
+|Forward [subword](#subword-movement)|<kbd>Alt</kbd><kbd>F</kbd>|<kbd>Ctrl</kbd><kbd>→</kbd>|<kbd>Alt</kbd><kbd>→</kbd>
+|Forward shell word|<kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>F</kbd>|<kbd>Ctrl</kbd><kbd>↓</kbd>|<kbd>Alt</kbd><kbd>↓</kbd>
+||
+|Backward kill [subword](#subword-movement)|<kbd>Alt</kbd><kbd>Backspace</kbd>|<kbd>Ctrl</kbd><kbd>Backspace</kbd>|<kbd>Alt</kbd><kbd>Backspace</kbd>
+|Backward kill shell word|<kbd>Ctrl</kbd><kbd>W</kbd>|<kbd>Shift</kbd><kbd>Ctrl</kbd><kbd>Backspace</kbd>|<kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>Backspace</kbd>
+|Forward delete character||<kbd>Delete</kbd>
+|Forward kill [subword](#subword-movement)|<kbd>Alt</kbd><kbd>D</kbd>|<kbd>Ctrl</kbd><kbd>Delete</kbd>|<kbd>Alt</kbd><kbd>Delete</kbd>
+|Forward kill shell word|<kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>D</kbd>|<kbd>Shift</kbd><kbd>Ctrl</kbd><kbd>Delete</kbd>|<kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>Delete</kbd>
+||
+|Beginning of line|<kbd>Ctrl</kbd><kbd>A</kbd>|<kbd>Home</kbd>
+|End of line|<kbd>Ctrl</kbd><kbd>E</kbd>|<kbd>End</kbd>
+|Beginning of buffer|<kbd>Alt</kbd><kbd><</kbd>|<kbd>Ctrl</kbd><kbd>Home</kbd>|<kbd>PageUp</kbd>
+|End of buffer|<kbd>Alt</kbd><kbd>></kbd>|<kbd>Ctrl</kbd><kbd>End</kbd>|<kbd>PageDn</kbd>
+|Backward kill line|<kbd>Ctrl</kbd><kbd>U</kbd>|<kbd>Shift</kbd><kbd>Home</kbd>|<kbd>Shift</kbd><kbd>←</kbd>
+|Forward kill line|<kbd>Ctrl</kbd><kbd>K</kbd>|<kbd>Shift</kbd><kbd>End</kbd>|<kbd>Shift</kbd><kbd>→</kbd>
 
 ## Clipboard Viewer
 Whenever you use <kbd>yank</kbd> (`^Y` in `emacs`), <kbd>vi-put-after</kbd> (`p` in `vicmd`) or

@@ -42,33 +42,32 @@ zsh-edit() {
     bindkey "${@:^^widget}"
   }
 
-  bindkey  '^?' backward-delete-char  '^[[3~' delete-char
-
-  .edit.bind backward-subword         '^[b'   '^[[1;5D'
-  .edit.bind backward-shell-word      '^[^B'  '^[[1;3D' '^[^[[D'  '^[^[OD'
-  .edit.bind forward-subword          '^[f'   '^[[1;5C'
-  .edit.bind forward-shell-word       '^[^F'  '^[[1;3C' '^[^[[C'  '^[^[OC'
-  .edit.bind backward-kill-subword    '^[^H'  '^H'      '^[[27;5;8~'
-  .edit.bind backward-kill-shell-word '^W'    '^[^?'    '^[[27;3;8~'
-  .edit.bind kill-subword             '^[d'   '^[[3;5~'
-  .edit.bind kill-shell-word          '^[^D'  '^[[3;3~' '^[^[[3~'
-  .edit.bind beginning-of-line        '^A'    '^[[H'    '^[OH'
-  .edit.bind end-of-line              '^E'    '^[[F'    '^[OF'
-  .edit.bind kill-line                '^K'    '^[[1;2F' '^[O2F'
-  .edit.bind backward-kill-line       '^U'    '^[[1;2H' '^[O2H'
-  .edit.bind end-of-buffer            '^[>'   '^[[1;5F' '^[O5F'
-  .edit.bind beginning-of-buffer      '^[<'   '^[[1;5H' '^[O5H'
+  .edit.bind backward-subword         '^[b'   '^[^['{\[,O}D   '^['{'[1;',\[,O}{3,5}D
+  .edit.bind backward-shell-word      '^[^B'  '^[^['{\[,O}A   '^['{'[1;',\[,O}{3,5}A
+  .edit.bind forward-subword          '^[f'   '^[^['{\[,O}C   '^['{'[1;',\[,O}{3,5}C
+  .edit.bind forward-shell-word       '^[^F'  '^[^['{\[,O}B   '^['{'[1;',\[,O}{3,5}B
+  .edit.bind backward-kill-subword    '^[^?'  '^[^?'  '^H'  '^[[27;'{3,5}';8~'
+  .edit.bind backward-kill-shell-word '^W'    '^[^H'        '^[[27;'{6,7}';8~'
+  bindkey '^[[3~' delete-char
+  .edit.bind kill-subword             '^[d'   '^[(' '^[^[[3~'   '^[[3;'{3,5}\~
+  .edit.bind kill-shell-word          '^[^D'        '^[^[[3;5~' '^[[3;'{6,7}\~
+  .edit.bind beginning-of-line        '^A'    '^['{\[,O}H
+  .edit.bind end-of-line              '^E'    '^['{\[,O}F
+  .edit.bind beginning-of-buffer      '^[<'   '^['{'[1;',\[,O}5H  '^[[5~'
+  .edit.bind end-of-buffer            '^[>'   '^['{'[1;',\[,O}5F  '^[[6~'
+  .edit.bind backward-kill-line       '^U'    '^['{'[1;',\[,O}2H  '^['{'[1;',\[,O}2D
+  .edit.bind kill-line                '^K'    '^['{'[1;',\[,O}2F  '^['{'[1;',\[,O}2C
 
   unfunction .edit.bind
 
   bindkey -M emacs  '^[e' redo  '^[Y' reverse-yank-pop
 
-  bind                  '^[-' 'pushd -1'      '^[=' 'pushd +0'
+  bind    -M emacs      '^[-' 'pushd -1'      '^[=' 'pushd +0'
   bindkey -M menuselect '^[-' menu-complete   '^[=' reverse-menu-complete
 
   zle -N dirstack-minus .edit.dirstack
   zle -N dirstack-plus  .edit.dirstack
-  bindkey                   '^[_' dirstack-minus  '^[+' dirstack-plus
+  bindkey -M emacs          '^[_' dirstack-minus  '^[+' dirstack-plus
   bindkey -M menuselect -s  '^[_' '^G^_^[_'       '^[+' '^G^_^[+'
 }
 
