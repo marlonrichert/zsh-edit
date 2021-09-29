@@ -123,9 +123,11 @@ elif [[ -v opts[-u] ]]; then
       print -cr - ${(q-)val}
 
 else
-  bindkey $mopt[@] "$@"
-  while (( $# >= 2 )); do
-    zle -N "$@[-1]" .edit.execute-cmd
-    shift -p 2
+  # Start each widget name with `.` to make autosuggestions & syntax highlighting ignore them.
+  local -i i=
+  for (( i = 2; i <= $#; i += 2 )); do
+    argv[i]=.$argv[i]
+    zle -N "$argv[i]" .edit.execute-cmd
   done
+  bindkey $mopt[@] "$@"
 fi
