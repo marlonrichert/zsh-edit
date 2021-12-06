@@ -1,10 +1,13 @@
 #!/bin/zsh
 emulate -L zsh; setopt $_edit_opts
+local -i move=0
 
 if [[ $WIDGET == *kill-* ]]; then
   zle -f kill
-  (( REGION_ACTIVE )) ||
-      MARK=$CURSOR
+  if (( REGION_ACTIVE )); then
+    zle .kill-region
+    return
+  fi
 fi
 
 if [[ $WIDGET == *-shell-word ]]; then
@@ -15,7 +18,7 @@ if [[ $WIDGET == *-shell-word ]]; then
       w=${(M)LBUFFER%$words[-1]*}
       shift -p words
     done
-    (( CURSOR -= $#w ))
+    move=-$#w
   else
     # We can't split $RBUFFER on words, because that usually doesn't parse correctly.
     local -a words=( ${${(z)BUFFER}:#\;} ) lwords=( ${${(z)LBUFFER}:#\;} )
@@ -25,7 +28,7 @@ if [[ $WIDGET == *-shell-word ]]; then
       w=${(M)RBUFFER#*$words[1]}
       shift words
     done
-    (( CURSOR += $#w ))
+    move=+$#w
   fi
 else
   local wordchars
@@ -35,13 +38,19 @@ else
   local subword='([[:WORD:]]##~*[^[:upper:]]*[[:upper:]]*~*[[:alnum:]]*[^[:alnum:]]*)'
   local word="(${subword}|[^[:WORD:][:space:]]##|[[:space:]]##)"
   if [[ $WIDGET == *backward-* ]]; then
-    (( CURSOR -= ${(M)#LBUFFER%%${~word}(?|)} ))
+    move=-${(M)#LBUFFER%%${~word}(?|)}
   else
-    (( CURSOR += ${(M)#RBUFFER##(?|)${~word}} ))
+    move=+${(M)#RBUFFER##(?|)${~word}}
   fi
 fi
 
-[[ $WIDGET == *kill-* ]] &&
-    zle .kill-region
+if [[ $WIDGET == *kill-* ]]; then
+  # Move the mark instead of the cursor, or else kill-region will add the kill
+  # to the wrong end of the cutbuffer.
+  (( MARK = CURSOR + move ))
+  zle .kill-region
+else
+  (( CURSOR += move ))
+fi
 
 return 0
