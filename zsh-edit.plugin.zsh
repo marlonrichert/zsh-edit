@@ -62,6 +62,7 @@ zsh-edit() {
 
   bindkey -M emacs  '^[e' redo  '^[Y' reverse-yank-pop
 
+  bind    -M emacs      '^[/' 'cd ..'
   bind    -M emacs      '^[-' 'pushd -1'      '^[=' 'pushd +0'
   bindkey -M menuselect '^[-' menu-complete   '^[=' reverse-menu-complete
 

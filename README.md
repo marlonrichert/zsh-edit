@@ -41,10 +41,12 @@ Zsh-Edit adds the following keyboard shortcuts to keymaps `main` and `emacs` (wh
 |-|-:|-:|-:
 |Redo (reverse Undo)|<kbd>Alt</kbd><kbd>E</kbd>
 |[Reverse yank pop](#clipboard-viewer)|<kbd>Alt</kbd><kbd>Y</kbd>
+||
 |`cd` to previous dir|<kbd>Alt</kbd><kbd>-</kbd>
 |Select from previous 16 dirs|<kbd>Shift</kbd><kbd>Alt</kbd><kbd>-</kbd>
 |`cd` to next dir|<kbd>Alt</kbd><kbd>=</kbd>
 |Select from next 16 dirs|<kbd>Shift</kbd><kbd>Alt</kbd><kbd>=</kbd>
+|`cd` to parent dir|<kbd>Alt</kbd><kbd>/</kbd>
 ||
 |Backward [subword](#subword-movement)|<kbd>Alt</kbd><kbd>B</kbd>|<kbd>Ctrl</kbd><kbd>←</kbd>|<kbd>Alt</kbd><kbd>←</kbd>
 |Backward shell word|<kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>B</kbd>|<kbd>Ctrl</kbd><kbd>↑</kbd>|<kbd>Alt</kbd><kbd>↑</kbd>
