@@ -40,6 +40,8 @@ zsh-edit() {
     shift 2
     bindkey -M emacs "$emacs" "$widget"
     bindkey "${@:^^widget}"
+    widget=.$widget
+    bindkey -M menuselect "${@:^^widget}"
   }
 
   .edit.bind backward-subword         '^[b'   '^[^['{\[,O}D   '^['{'[1;',\[,O}{3,5}D
