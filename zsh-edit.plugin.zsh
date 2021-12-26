@@ -20,6 +20,8 @@ zsh-edit() {
   }
   zle -N {,.}beginning-of-buffer
   zle -N {,.}end-of-buffer
+  zle -N dirstack-minus .edit.dirstack
+  zle -N dirstack-plus  .edit.dirstack
 
   local widget
   for widget in yank yank-pop reverse-yank-pop vi-put-before vi-put-after; do
@@ -27,6 +29,9 @@ zsh-edit() {
   done
   for widget in {{back,for}ward,{backward-,}kill}-{sub,shell-}word; do
     zle -N "$widget" .edit.subword
+  done
+  for widget in {insert-{last,first},copy-{prev,next}}-word; do
+    zle -N "$widget" .edit.insert-word
   done
 
   [[ -v ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS ]] ||
@@ -48,7 +53,8 @@ zsh-edit() {
   .edit.bind backward-shell-word      '^[^B'  '^[^['{\[,O}A   '^['{'[1;',\[,O}{3,5}A
   .edit.bind forward-subword          '^[f'   '^[^['{\[,O}C   '^['{'[1;',\[,O}{3,5}C
   .edit.bind forward-shell-word       '^[^F'  '^[^['{\[,O}B   '^['{'[1;',\[,O}{3,5}B
-  .edit.bind backward-kill-subword    '^[^?'  '^[^?'  '^H'  '^[[27;'{3,5}';8~'
+  bindkey '^?'    backward-delete-char
+  .edit.bind backward-kill-subword    '^H'    '^H'  '^[^?'  '^[[27;'{3,5}';8~'
   .edit.bind backward-kill-shell-word '^W'    '^[^H'        '^[[27;'{6,7}';8~'
   bindkey '^[[3~' delete-char
   .edit.bind kill-subword             '^[d'   '^[(' '^[^[[3~'   '^[[3;'{3,5}\~
@@ -63,15 +69,13 @@ zsh-edit() {
   unfunction .edit.bind
 
   bindkey -M emacs  '^[/' redo  '^[Y' reverse-yank-pop
-
+  bindkey -M emacs  '^[.' insert-last-word  '^[,' insert-first-word \
+                    '^[^_' copy-prev-word   '^[_' copy-next-word
   bind    -M emacs      '^[:' 'cd ..'
   bind    -M emacs      '^[-' 'pushd -1'      '^[=' 'pushd +0'
   bindkey -M menuselect '^[-' menu-complete   '^[=' reverse-menu-complete
-
-  zle -N dirstack-minus .edit.dirstack
-  zle -N dirstack-plus  .edit.dirstack
-  bindkey -M emacs          '^[_' dirstack-minus  '^[+' dirstack-plus
-  bindkey -M menuselect -s  '^[_' '^G^_^[_'       '^[+' '^G^_^[+'
+  bindkey -M emacs          '^[`' dirstack-minus  '^[~' dirstack-plus
+  bindkey -M menuselect -s  '^[`' '^G^_^[_'       '^[~' '^G^_^[+'
 }
 
 {

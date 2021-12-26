@@ -42,22 +42,28 @@ Zsh-Edit adds the following keyboard shortcuts to keymaps `main` and `emacs` (wh
 |Redo (reverse Undo)|<kbd>Alt</kbd><kbd>/</kbd>
 |[Reverse yank pop](#clipboard-viewer)|<kbd>Alt</kbd><kbd>Y</kbd>
 ||
-|`cd` to previous dir|<kbd>Alt</kbd><kbd>-</kbd>
-|Select from previous 16 dirs|<kbd>Shift</kbd><kbd>Alt</kbd><kbd>-</kbd>
-|`cd` to next dir|<kbd>Alt</kbd><kbd>=</kbd>
-|Select from next 16 dirs|<kbd>Shift</kbd><kbd>Alt</kbd><kbd>=</kbd>
 |`cd` to parent dir|<kbd>Shift</kbd><kbd>Alt</kbd><kbd>;</kbd>
+|`cd` to previous dir|<kbd>Alt</kbd><kbd>-</kbd>
+|`cd` to next dir|<kbd>Alt</kbd><kbd>=</kbd>
+|Select from previous 16 dirs|<kbd>Alt</kbd><kbd>`</kbd>
+|Select from next 16 dirs|<kbd>Shift</kbd><kbd>Alt</kbd><kbd>`</kbd>
+||
+|Repeat word up|<kbd>Alt</kbd><kbd>.</kbd>
+|Repeat word down|<kbd>Alt</kbd><kbd>,</kbd>
+|Repeat word left|<kbd>Alt</kbd><kbd>Ctrl</kbd><kbd>-</kbd>
+|Repeat word right|<kbd>Alt</kbd><kbd>Shift</kbd><kbd>-</kbd>
 ||
 |Backward [subword](#subword-movement)|<kbd>Alt</kbd><kbd>B</kbd>|<kbd>Ctrl</kbd><kbd>←</kbd>|<kbd>Alt</kbd><kbd>←</kbd>
 |Backward shell word|<kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>B</kbd>|<kbd>Ctrl</kbd><kbd>↑</kbd>|<kbd>Alt</kbd><kbd>↑</kbd>
 |Forward [subword](#subword-movement)|<kbd>Alt</kbd><kbd>F</kbd>|<kbd>Ctrl</kbd><kbd>→</kbd>|<kbd>Alt</kbd><kbd>→</kbd>
 |Forward shell word|<kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>F</kbd>|<kbd>Ctrl</kbd><kbd>↓</kbd>|<kbd>Alt</kbd><kbd>↓</kbd>
 ||
-|Backward kill [subword](#subword-movement)|<kbd>Alt</kbd><kbd>Backspace</kbd>|<kbd>Ctrl</kbd><kbd>Backspace</kbd>|<kbd>Alt</kbd><kbd>Backspace</kbd>
-|Backward kill shell word|<kbd>Ctrl</kbd><kbd>W</kbd>|<kbd>Shift</kbd><kbd>Ctrl</kbd><kbd>Backspace</kbd>|<kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>Backspace</kbd>
-|Forward delete character||<kbd>Delete</kbd>
-|Forward kill [subword](#subword-movement)|<kbd>Alt</kbd><kbd>D</kbd>|<kbd>Ctrl</kbd><kbd>Delete</kbd>|<kbd>Alt</kbd><kbd>Delete</kbd>
-|Forward kill shell word|<kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>D</kbd>|<kbd>Shift</kbd><kbd>Ctrl</kbd><kbd>Delete</kbd>|<kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>Delete</kbd>
+|Backward delete character||<kbd>⌫</kbd>
+|Forward delete character||<kbd>⌦</kbd>
+|Backward kill [subword](#subword-movement)|<kbd>Ctrl</kbd><kbd>H</kbd>|<kbd>Ctrl</kbd><kbd>⌫</kbd>|<kbd>Alt</kbd><kbd>⌫</kbd>
+|Backward kill shell word|<kbd>Ctrl</kbd><kbd>W</kbd>|<kbd>Shift</kbd><kbd>Ctrl</kbd><kbd>⌫</kbd>|<kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>⌫</kbd>
+|Forward kill [subword](#subword-movement)|<kbd>Alt</kbd><kbd>D</kbd>|<kbd>Ctrl</kbd><kbd>⌦</kbd>|<kbd>Alt</kbd><kbd>⌦</kbd>
+|Forward kill shell word|<kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>D</kbd>|<kbd>Shift</kbd><kbd>Ctrl</kbd><kbd>⌦</kbd>|<kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>⌦</kbd>
 ||
 |Beginning of line|<kbd>Ctrl</kbd><kbd>A</kbd>|<kbd>Home</kbd>
 |End of line|<kbd>Ctrl</kbd><kbd>E</kbd>|<kbd>End</kbd>
