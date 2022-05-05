@@ -13,15 +13,26 @@ case $WIDGET in
       zstyle -s :edit:insert-word index word_index
   ;;
 esac
-(( word_index += word_offset ))
+if (( word_index + word_offset == 0 )); then
+  (( word_index *= -1 ))
+else
+  (( word_index += word_offset ))
+fi
 {
-  (( word_index )) &&
-      zle .insert-last-word -- "$line_offset" "$word_index"
-} always {
-  if (( ? )); then
-    (( word_index -= word_offset ))
-    zle .insert-last-word -- "$line_offset" "$word_index"
+  zle .insert-last-word -- "$line_offset" "$word_index" &&
+      return
+
+  if (( word_index > 0 )); then
+    (( word_index = -1 ))
+  elif (( word_index < 0 )); then
+    (( word_index = 1 ))
+  else
+    return
   fi
+
+  zle .insert-last-word -- "$line_offset" "$word_index"
+
+} always {
   zstyle :edit:insert-word index $word_index
   zstyle :edit:insert-word buffer $BUFFER
   zstyle :edit:insert-word histno $HISTNO
