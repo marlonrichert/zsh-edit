@@ -1,9 +1,8 @@
 #!/bin/zsh
 emulate -L zsh
 zmodload zsh/complist
-zmodload zsh/parameter
-zmodload -F zsh/terminfo p:terminfo
-zmodload -F zsh/zleparameter p:widgets
+zmodload -Fa zsh/zleparameter p:widgets
+zmodload -Fa zsh/zutil b:zformat
 autoload -Uz add-zsh-hook
 setopt $_edit_opts
 
@@ -17,13 +16,15 @@ if [[ -v opts[-d] ]]; then
   for w in "${(@ko)widgets}"; do
     bindings=( ${(M)all_bindings:#* $w}  )
     (( $#bindings > 1 )) &&
-        dup_bindings+=( $w $'\t'"${(pj:\t:)bindings[@]% $w}" )
+        dup_bindings+=( ${w}:${(j.:.)${${(n)bindings[@]:/(#m)*/$#MATCH$'\0'$MATCH}[@]#*$'\0'}[@]% $w} )
   done
-  print -raC2 $dup_bindings[@]
-
+  while [[ $dup_bindings[(I)*:*] -gt 0 ]]; do
+    zformat -a dup_bindings ' ' "$dup_bindings[@]"
+  done
+  print -lr "$dup_bindings[@]"
 elif [[ -v opts[-n] ]]; then
   local -A names=()
-  local -a match=() mbegin=() mend=()
+  local -a match=() mbegin=() mend=() out=()
   local key= code= name= expl=
   for key; do
     match=() name= code="${(g:ceo:)key}"
@@ -42,42 +43,45 @@ elif [[ -v opts[-n] ]]; then
             ( Z ) name+='Shift-Tab' ;;
           esac
         ;;
-        ( (#b)($'\e['([56])\~)* )
+        ( (#b)($'\e['([356])\~)* )
           case $match[2] in
+            ( 3 ) name+='Delete' ;;
             ( 5 ) name+='PageUp' ;;
             ( 6 ) name+='PageDown' ;;
           esac
         ;;
-        ( (#b)($'\e'(\[[156]\;|O)(<2-16>)([ABCDFH~]))* )
+        ( (#b)($'\e'(O|\[|\[[1356]\;|\[27\;)(|<2-16>)([ABCDFH~]|\;8~))* )
           case $match[3] in
             (  2 ) name+='Shift' ;;
             (  3 ) name+='Alt' ;;
-            (  4 ) name+='Shift-Alt' ;;
-            (  5 ) name+='Control' ;;
-            (  6 ) name+='Shift-Control' ;;
-            (  7 ) name+='Alt-Control' ;;
-            (  8 ) name+='Shift-Alt-Control' ;;
+            (  4 ) name+='Alt-Shift' ;;
+            (  5 ) name+='Ctrl' ;;
+            (  6 ) name+='Ctrl-Shift' ;;
+            (  7 ) name+='Ctrl-Alt' ;;
+            (  8 ) name+='Ctrl-Alt-Shift' ;;
             (  9 ) name+='Meta' ;;
             ( 10 ) name+='Meta-Shift' ;;
             ( 11 ) name+='Meta-Alt' ;;
             ( 12 ) name+='Meta-Alt-Shift' ;;
-            ( 13 ) name+='Meta-Ctrl' ;;
-            ( 14 ) name+='Meta-Ctrl-Shift' ;;
-            ( 15 ) name+='Meta-Ctrl-Alt' ;;
-            ( 16 ) name+='Meta-Ctrl-Alt-Shift' ;;
+            ( 13 ) name+='Ctrl-Meta' ;;
+            ( 14 ) name+='Ctrl-Meta-Shift' ;;
+            ( 15 ) name+='Ctrl-Meta-Alt' ;;
+            ( 16 ) name+='Ctrl-Meta-Alt-Shift' ;;
           esac
           name+='-'
           case $match[4] in
-            ( A ) name+='Up'    ;;
-            ( B ) name+='Down'  ;;
-            ( C ) name+='Right' ;;
-            ( D ) name+='Left'  ;;
-            ( F ) name+='End'   ;;
-            ( H ) name+='Home'  ;;
-            ( \~ )
+            ( A     ) name+='Up'        ;;
+            ( B     ) name+='Down'      ;;
+            ( C     ) name+='Right'     ;;
+            ( D     ) name+='Left'      ;;
+            ( F     ) name+='End'       ;;
+            ( H     ) name+='Home'      ;;
+            ( \;8~  ) name+='Backspace' ;;
+            ( \~    )
               case $match[2] in
-                ( '[5;' ) name+='PageUp' ;;
-                ( '[6;' ) name+='PageDown' ;;
+                ( '[3;' ) name+='Delete'    ;;
+                ( '[5;' ) name+='PageUp'    ;;
+                ( '[6;' ) name+='PageDown'  ;;
               esac
             ;;
           esac
@@ -105,7 +109,10 @@ elif [[ -v opts[-n] ]]; then
     done
     names["$key"]=$name
   done
-  print -rl -- ${${(fn)"$( print -raC2 -- "${(kv@)names}" )"}[@]%%[[:space:]]#}
+  for key; do
+    out+=( ${(M)"$( bindkey $key )"##\"*\" } $names["$key"] )
+  done
+  print -arC2 -- "$out[@]"
 
 elif [[ -v opts[-u] ]]; then
   local -a val=() keys=(
@@ -126,7 +133,7 @@ else
   # Start each widget name with `.` to make autosuggestions & syntax highlighting ignore them.
   local -i i=
   for (( i = 2; i <= $#; i += 2 )); do
-    argv[i]=.$argv[i]
+    argv[i]=".${(qq)argv[i]}"
     zle -N "$argv[i]" .edit.execute-cmd
   done
   bindkey $mopt[@] "$@"

@@ -1,4 +1,7 @@
 #!/bin/zsh -f
-print $VENDOR $OSTYPE =zsh $ZSH_VERSION $ZSH_PATCHLEVEL =clitest
-local +h -a fpath=( ${0:h}/*(-/) $fpath )
-FPATH=$FPATH zsh -f =clitest --list-run --progress dot --prompt '%' -- ${0:h}/.clitest/*.md
+cd ${0:A:h}
+env -i HOME=$( mktemp -d ) PATH=$PATH FPATH=$FPATH /bin/zsh -f -- \
+    =clitest  --list-run --progress dot --prompt '%' \
+        --pre-flight 'git --version; print $PWD $VENDOR $OSTYPE =zsh $ZSH_VERSION $ZSH_PATCHLEVEL' \
+        --diff-options -b \
+        -- $PWD/.clitest/*.md
