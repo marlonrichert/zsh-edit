@@ -2,8 +2,40 @@
 Zsh-Edit is a set of powerful extensions to the Zsh command line editor.
 
 ## Requirements
-* Recommended: Zsh 5.7.1 or newer
+* Recommended: Zsh 5.8 or newer
 * Minimum: Zsh 5.4.2
+
+## Installating & updating
+I recommend using [Znap](https://github.com/marlonrichert/zsh-snap) or installing the plugin
+manually. You can also install it using any 3rd-party framework or plugin manager you like, but I
+won't document that here.
+
+### Using Znap
+Aust add this to your `.zshrc` file:
+```zsh
+znap source marlonrichert/zsh-edit
+```
+To update, run `znap pull`.
+
+### Manually
+1. Clone the repo:
+   ```zsh
+   % git clone --depth 1 https://github.com/marlonrichert/zsh-edit.git
+   ```
+1. Source the plugin in your `.zshrc` file:
+   ```zsh
+   source <your plugins dir>/zsh-edit/zsh-edit.plugin.zsh
+   ```
+1. Restart your shell:
+   ```zsh
+   exec zsh
+   ```
+To update:
+```zsh
+% cd <your plugins dir>/zsh-edit
+% git pull
+```
+
 
 ## `bind` Command
 ```zsh
