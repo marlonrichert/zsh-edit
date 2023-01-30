@@ -68,13 +68,6 @@ zsh-edit() {
   .edit.bind backward-kill-line       '^U'    "$shift_ctrl_backspace[@]"  '^X'"$backspace"
   .edit.bind          kill-line       '^K'    "$shift_ctrl_delete[@]"     '^X'"$delete"
 
-  # TODO: Let 'expand-history' do autocorrection from history when there's no history expansion on the line.
-  # TODO: Search only through the last ~512 $historywords to prevent Zsh from crashing.
-  zle -N {,.edit.}expand-history
-  .edit.expand-history () {
-    zle .expand-history || zle spell-word # || TODO: matching history line
-  }
-
   .beginning-of-buffer() { CURSOR=0 }
         .end-of-buffer() { CURSOR=$#BUFFER }
   zle -N {,.}beginning-of-buffer
@@ -90,11 +83,6 @@ zsh-edit() {
       end-of-line
       forward-{shell-,sub}word
   )
-
-  zle -N find-replace-char    .edit.find-replace
-  zle -N find-replace-pattern .edit.find-replace
-  bindkey -M emacs  '^]'    find-replace-char
-  # bindkey -M emacs  '^[^]'  find-replace-pattern
 
   for widget in yank yank-pop reverse-yank-pop vi-put-before vi-put-after; do
     zle -N $widget .edit.visual-yank
