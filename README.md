@@ -46,7 +46,7 @@ bind \
     '^[o' 'open .' \
     '^[l' 'git log' \
     '^[s' 'git status -Mu --show-stash'
-```zsh
+```
 
 List duplicate keybindings in the main keymap or another one.
 ```zsh
