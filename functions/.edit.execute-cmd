@@ -5,7 +5,7 @@ add-zle-hook-widget -d line-init "$WIDGET"
 case $CONTEXT in
   ( start )   # PS1
     zle .push-line
-    BUFFER="${WIDGET#.}"
+    BUFFER="${(Q)WIDGET#.}"
     zle .accept-line
   ;;
   ( cont )    # PS2
