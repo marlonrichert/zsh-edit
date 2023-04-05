@@ -2,22 +2,33 @@
 zmodload -F zsh/parameter p:historywords
 
 local -i line_offset=0 word_offset=0 word_index=0
+
 case $WIDGET in
-  ( insert-last-*  ) line_offset=-1 word_index=-1 ;;
-  ( insert-first-* ) line_offset=1  word_index=-1 ;;
-  ( copy-prev-* ) word_offset=-1 ;|
-  ( copy-next-* ) word_offset=1  ;|
-  ( copy-*      )
+  ( *insert-last-* )
+    line_offset=-1 word_index=-1
+  ;;
+  ( *insert-first-* )
+    line_offset=1  word_index=-1
+  ;;
+  ( *copy-prev-* )
+    word_offset=-1
+  ;|
+  ( *copy-next-* )
+    word_offset=1
+    ;|
+  ( *copy-* )
     zstyle -t :edit:insert-word buffer $BUFFER &&
         zstyle -t :edit:insert-word histno $HISTNO &&
-      zstyle -s :edit:insert-word index word_index
+        zstyle -s :edit:insert-word index word_index
   ;;
 esac
+
 if (( word_index + word_offset == 0 )); then
   (( word_index *= -1 ))
 else
   (( word_index += word_offset ))
 fi
+
 {
   zle .insert-last-word -- "$line_offset" "$word_index" &&
       return
