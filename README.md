@@ -1,14 +1,12 @@
 # Zsh Edit
-_Zsh Edit_ is a set of powerful extensions to the Zsh command line editor.
+_Zsh Edit_ is a set of handy utilities for making life easier on the Zsh command line.
 
 ## Requirements
-* Recommended: Zsh 5.8 or newer
-* Minimum: Zsh 5.4.2
+Tested to work with Zsh 5.8 and newer.
 
 ## Installating & updating
-I recommend using [Znap](https://github.com/marlonrichert/zsh-snap) or installing the plugin
-manually. You can also install it using any 3rd-party framework or plugin manager you like, but I
-won't document that here.
+I recommend using [Znap](https://github.com/marlonrichert/zsh-snap) or installing the plugin manually.  You can also
+install it using any 3rd-party framework or plugin manager you like, but I won't document that here.
 
 ### Using Znap
 Aust add this to your `.zshrc` file:
@@ -36,16 +34,13 @@ To update:
 % git pull
 ```
 
-
 ## `bind` Command
-Bind shell commands directly to keyboard shortcuts. What's more, when using these, your current command line will be
+Bind shell commands directly to keyboard shortcuts.  What's more, when using these, your current command line will be
 left intact.
 ```zsh
-bind \
-    '^[c' 'code .' \
-    '^[o' 'open .' \
-    '^[l' 'git log' \
-    '^[s' 'git status -Mu --show-stash'
+bind  '^[:' 'cd ..'
+bind  '^[-' 'pushd -1' \
+      '^[=' 'pushd +0'
 ```
 
 List duplicate keybindings in the main keymap or another one.
@@ -60,10 +55,11 @@ bind -u
 bind -uM emacs
 ```
 
-Look up which combination of keys would generate a code listed by `bind` and `bindkey`.
+Look up which combination of keys could generate an escape sequence listed by `bind` or `bindkey`.
 ```zsh
 % bind -n '^[[5~' '^[^[OA'
-PreviousPage  Alt-UpArrow
+"^[[5~"    PageUp
+"^[^[OA"   Alt-Up
 ```
 
 ## Key Bindings
@@ -72,15 +68,14 @@ _Zsh Edit_ adds the keyboard shortcuts below to your `main` and `emacs` keymaps.
 * However, if you use `vi` mode, then your `main` keymap will be the `viins` keymap.
 
 All key bindings can be modified through [Zsh's `bindkey`
-command](https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#Zle-Builtins),
-_after_ sourcing _Zsh Edit_.
+command](https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#Zle-Builtins), _after_ sourcing _Zsh Edit_.
 
 ⚠️ Note:
 * Not all terminals support all key bindings.
 * In some terminals, instead of <kbd>Alt</kbd>, you'll have to press <kbd>Esc</kbd> or <kbd>Ctrl</kbd><kbd>[</kbd>.
-* In many terminals, <kbd>Home</kbd>, <kbd>End</kbd>, <kbd>PgUp</kbd> and <kbd>PgDn</kbd> scroll the terminal buffer
-and don't send any keystrokes to the shell. To use these keys in the shell, you'll have to hold an additional a
-modifier key, usually <kbd>Shift</kbd>. Refer to your terminal's documentation and/or settings for more info.
+* In many terminals, <kbd>Home</kbd>, <kbd>End</kbd>, <kbd>PgUp</kbd> and <kbd>PgDn</kbd> scroll the terminal buffer and
+  don't send any keystrokes to the shell.  To use these keys in the shell, you'll have to hold an additional modifier
+  key, usually <kbd>Shift</kbd>.  Refer to your terminal's documentation and/or settings for more info.
 
 |Command|`emacs` keymap|`main` keymap||
 |-|-:|-:|-:
