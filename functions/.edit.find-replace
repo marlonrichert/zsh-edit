@@ -1,0 +1,19 @@
+#!/bin/zsh
+local find replace
+# case $WIDGET in
+#   ( *-char )
+    read -k find
+    read -k replace
+  ;;
+#   ( *-pattern )
+#     local buffer=$BUFFER
+#     {
+
+#     vared -p pattern find
+#     vared -p replacement replace
+#   ;;
+# esac
+find=${find//$'\r'/$'\n'}
+replace=${replace//$'\r'/$'\n'}
+LBUFFER=${LBUFFER//$find/$replace}
+RBUFFER=${RBUFFER//$find/$replace}
