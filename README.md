@@ -80,6 +80,8 @@ command](https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#Zle-Builtin
 |Command|`emacs` keymap|`main` keymap||
 |-|-:|-:|-:
 |Redo (reverse Undo)                                                                         |<kbd>Alt</kbd><kbd>/</kbd>
+|Recover last line aborted with <kbd>Ctrl</kbd><kbd>C</kbd> or <kbd>Ctrl</kbd><kbd>G</kbd>   |<kbd>Alt</kbd><kbd>Shift</kbd><kbd>G</kbd>
+|[Replace all](#Replace-all-occurences-of-a-character)                                       |<kbd>Ctrl</kbd><kbd>]</kbd>
 |[Reverse yank pop](#clipboard-viewer)                                                       |<kbd>Alt</kbd><kbd>Y</kbd>
 ||
 |Repeat word up   |<kbd>Alt</kbd><kbd>.</kbd>

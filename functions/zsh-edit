@@ -71,6 +71,10 @@ zle -N {,.}end-of-buffer
 bindkey -M menuselect "$page_up"  backward-word
 bindkey -M menuselect "$page_down" forward-word
 
+.recover-line() { LBUFFER+=$ZLE_LINE_ABORTED }
+zle -N {,.}recover-line
+.edit.bind recover-line '^[G'
+
 unfunction .edit.bind
 
 [[ -v ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS ]] ||
