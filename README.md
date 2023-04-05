@@ -105,6 +105,11 @@ command](https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#Zle-Builtin
 |Backward kill line                         |<kbd>Ctrl</kbd><kbd>U</kbd>              |<kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>⌫</kbd>|<kbd>Ctrl</kbd><kbd>X</kbd> <kbd>⌫</kbd>
 |Forward kill line                          |<kbd>Ctrl</kbd><kbd>K</kbd>              |<kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>⌦</kbd>|<kbd>Ctrl</kbd><kbd>X</kbd> <kbd>⌦</kbd>
 
+## Replace All Occurences of a Character
+Press <kbd>Ctrl</kbd><kbd>]</kbd> followed by two characters and all occurences of the first character will be replaced
+with the second character. This is useful, for example, if you pasted a list of files separated by line breaks into the
+command line, but you need them to be separated with spaces instead.
+
 ## Clipboard Viewer
 Whenever you use <kbd>yank</kbd> (`^Y` in `emacs`), <kbd>vi-put-after</kbd> (`p` in `vicmd`) or <kbd>vi-put-after</kbd>
 (`P` in `vicmd`) to paste a kill into the command line, _Zsh Edit_ will list the contents of your kill ring (including
