@@ -2,6 +2,9 @@
 emulate -L zsh; setopt $_edit_opts
 local -i move=0
 
+# TODO: Think of a generic logic + config to always land to the left of whitespace.
+# Adding space to $WORDCHARS doesn't make sense, because then you don't land on the left when you skip a non-word.
+
 if [[ $WIDGET == *kill-* ]]; then
   zle -f kill
   if (( REGION_ACTIVE )); then
