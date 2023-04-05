@@ -1,0 +1,8 @@
+#!/bin/zsh
+local find replace
+read -k find
+read -k replace
+find=${find:/$'\r'/$'\n'}
+replace=${replace:/$'\r'/$'\n'}
+LBUFFER=${LBUFFER//$find/$replace}
+RBUFFER=${RBUFFER//$find/$replace}
