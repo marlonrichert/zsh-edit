@@ -5,14 +5,6 @@ emulate -L zsh
 typeset -gHa _edit_opts=( extendedglob NO_listbeep NO_shortloops warncreateglobal )
 setopt $_edit_opts
 
-.edit.bind() {
-  local widget=$1
-  shift
-  bindkey -M emacs "$1" "$widget"
-  bindkey "${@:^^widget}"
-  widget=.$widget
-  bindkey -M menuselect "${@:^^widget}"
-}
 
 local -a          left=(  '^['{\[,O}D )
 local -a    shift_left=(  '^['{'[1;',\[,O}2D )
@@ -46,6 +38,15 @@ local widget=''
 for widget in {{back,for}ward,{backward-,}kill}-{sub,shell-}word; do
   zle -N "$widget" .edit.subword
 done
+
+.edit.bind() {
+  local widget=$1
+  shift
+  bindkey -M emacs "$1" "$widget"
+  bindkey "${@:^^widget}"
+  widget=.$widget
+  bindkey -M menuselect "${@:^^widget}"
+}
 
 bindkey "$backspace"  backward-delete-char
 bindkey "$delete"     delete-char
@@ -100,17 +101,3 @@ bindkey -M emacs  '^[.'  insert-last-word \
                   '^[,'  insert-first-word \
                   '^[^_' copy-prev-word \
                   '^[_'  copy-next-word
-
-zle -N dirstack-minus .edit.dirstack
-zle -N dirstack-plus  .edit.dirstack
-bindkey -M emacs          '^[`' dirstack-minus \
-                          '^[~' dirstack-plus
-bindkey -M menuselect -s  '^[`' '^G^_^[_' \
-                          '^[~' '^G^_^[+'
-
-bind    -M emacs      '^[:' 'cd ..'
-
-bind    -M emacs      '^[-' 'pushd -1' \
-                      '^[=' 'pushd +0'
-bindkey -M menuselect '^[-' menu-complete \
-                      '^[=' reverse-menu-complete
