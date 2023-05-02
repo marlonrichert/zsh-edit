@@ -2,7 +2,6 @@
 zmodload zsh/complist
 
 emulate -L zsh
-typeset -gHa _edit_opts=( extendedglob NO_listbeep NO_shortloops warncreateglobal )
 setopt $_edit_opts
 
 
