@@ -129,45 +129,43 @@ bound to `^[Y` in the `emacs` keymap.
 Zsh's widgets <kbd>forward-word</kbd>, <kbd>backward-word</kbd>, <kbd>kill-word</kbd> and <kbd>backward-kill-word</kbd>
 fail to stop on many of the positions that we humans see as word boundaries:
 ```zsh
-# Zsh default word boundaries 😕
+# Zsh with default WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' moves/deletes way too much:
+% ENV_VAR=value command --option-flag camelCaseWord ~/dir/*.ext
+#               <       <             <             <
 
-# With default WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>'
-#     > >     >  >          >   >      >     >                        >
-% dscl . -read ~/ UserShell; git config --get status.showUntrackedFiles
-# <    < <     <  <          <   <      <     <
-# Skips/deletes _way_ too much.
-
-# With WORDCHARS=''
-#        >       >          >   >        >   >      >                 >
-% dscl . -read ~/ UserShell; git config --get status.showUntrackedFiles
-# <       <       <          <   <        <   <      <
-# A bit better, but skips _all_ punctuation clusters & doesn't find SubWords.
+# Zsh with  WORDCHARS='' is bit better, but skips punctuation clusters & doesn't find SubWords:
+% ENV_VAR=value command --option-flag camelCaseWord ~/dir/*.ext
+#     <   <     <         <      <    <               <     <
 ```
 
 _Zsh Edit_ adds new widgets with better parsing rules that can find all the word boundaries that matter to us as humans:
 
 ```zsh
-# Word boundaries with _Zsh Edit_ 🤗
+# Zsh Edit with WORDCHARS='':
+% ENV_VAR=value command --option-flag camelCaseWord ~/dir/*.ext
+#    <   <     <       <        <    <     <   <   <     <
+```
+Note how, with Zsh Edit, the cursor always lands at the end of each subword.  Compare this to the vanilla Zsh example
+above and you'll see that this leads to movement with fewer surprises.  Additionally, this puts the cursor in the most
+optimal spot to start typing or invoke tab completion.
 
-# With default WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>'
-#    > >     >  >    >    > >  >      >     >      >    >        >    >
-% dscl . -read ~/ UserShell; git config --get status.showUntrackedFiles
-# <    < <     <  <   <    < <   <      <     <     <    <        <
+To stop a character from being treated as a subword separator, simply add it to `$WORDCHARS`.  For example, by treating
+`~` and `*` as word characters, you can get more precise subword movement in file strings:
 
-# With WORDCHARS=''
-#    > > >   >  >    >    > >  >      >  >  >      >    >        >    >
-% dscl . -read ~/ UserShell; git config --get status.showUntrackedFiles
-# <   < < <    <  <   <    < <   <      < <   <      <   <        <
+```zsh
+# Zsh Edit with WORDCHARS='~*':
+% ENV_VAR=value command --option-flag camelCaseWord ~/dir/*.ext
+#    <   <     <       <        <    <     <   <   < <   < <
 ```
 
-If you don't want to change your `$WORDCHARS` globally, you can instead use
+If you don't want to change your `$WORDCHARS` globally, you can instead use the following:
 ```zsh
-zstyle ':edit:*' word-chars '*?\'
+zstyle ':edit:*' word-chars '~*'
 ```
 This will change `$WORDCHARS` only for the widgets provided by Zsh Edit.
 
 ## Author
-© 2020-2021 [Marlon Richert](https://github.com/marlonrichert)
+© 2020-2023 [Marlon Richert](https://github.com/marlonrichert)
 
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

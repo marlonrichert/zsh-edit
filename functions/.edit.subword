@@ -13,19 +13,28 @@ fi
 if [[ $WIDGET == *-shell-word ]]; then
   local w=
   if [[ $WIDGET == *backward* ]]; then
-    local -a words=( ${${(z)LBUFFER}:#\;} )
+    local -a words=( ${(z)LBUFFER} )
     while [[ -z $w && $#words[@] -gt 0 ]]; do
-      w=${(M)LBUFFER%$words[-1]*}
+      if [[ $words[-1] == \; ]]; then
+        w=${(M)LBUFFER%[$';\n']*}
+      else
+        w=${(M)LBUFFER%$words[-1]*}
+      fi
+      w=${(M)LBUFFER%%[[:blank:]]#$w}
       shift -p words
     done
     move=-$#w
   else
     # We can't split $RBUFFER on words, because that usually doesn't parse correctly.
-    local -a words=( ${${(z)BUFFER}:#\;} ) lwords=( ${${(z)LBUFFER}:#\;} )
+    local -a words=( ${(z)BUFFER} ) lwords=( ${(z)LBUFFER} )
     words=( $words[$#lwords[@],-1] )
     words[1]=${words[1]#$lwords[-1]}
     while [[ -z $w && $#words[@] -gt 0 ]]; do
-      w=${(M)RBUFFER#*$words[1]}
+      if [[ $words[1] == \; ]]; then
+        w=${(M)RBUFFER#*[$';\n']}
+      else
+        w=${(M)RBUFFER#*$words[1]}
+      fi
       shift words
     done
     move=+$#w
@@ -35,18 +44,16 @@ else
   zstyle -s ":edit:$WIDGET:" word-chars wordchars &&
       local +h WORDCHARS="$wordchars"
 
-  local subword='([[:WORD:]]##~*[^[:upper:]]*[[:upper:]]*~*[[:alnum:]]*[^[:alnum:]]*)'
-  local word="(${subword}|[^[:WORD:][:space:]]##|[[:space:]]##)"
+  local word='([[:space:]]~[[:WORD:]])#([^[:WORD:][:space:]])#[[:upper:]]#([[:WORD:]]~[[:upper:]])#'
   if [[ $WIDGET == *backward-* ]]; then
-    move=-${(M)#LBUFFER%%${~word}(?|)}
+    move=-${(M)#LBUFFER%%$~word}
   else
-    move=+${(M)#RBUFFER##(?|)${~word}}
+    move=+${(M)#RBUFFER##$~word}
   fi
 fi
 
 if [[ $WIDGET == *kill-* ]]; then
-  # Move the mark instead of the cursor, or else kill-region will add the kill
-  # to the wrong end of the cutbuffer.
+  # Move the mark instead of the cursor, or else kill-region will add the kill to the wrong end of the cutbuffer.
   (( MARK = CURSOR + move ))
   zle .kill-region
 else
