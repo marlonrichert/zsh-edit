@@ -2,6 +2,9 @@
 emulate -L zsh; setopt $_edit_opts
 local -i move=0
 
+local tradback
+zstyle -b ":edit:$WIDGET:" traditional-backward-movement tradback
+
 if [[ $WIDGET == *kill-* ]]; then
   zle -f kill
   if (( REGION_ACTIVE )); then
@@ -14,15 +17,23 @@ if [[ $WIDGET == *-shell-word ]]; then
   local w=
   if [[ $WIDGET == *backward* ]]; then
     local -a words=( ${(z)LBUFFER} )
-    while [[ -z $w && $#words[@] -gt 0 ]]; do
-      if [[ $words[-1] == \; ]]; then
-        w=${(M)LBUFFER%[$';\n']*}
+    if [[ $tradback != yes ]]; then
+      while [[ -z $w && $#words[@] -gt 0 ]]; do
+        if [[ $words[-1] == \; ]]; then
+          w=${(M)LBUFFER%[$';\n']*}
+        else
+          w=${(M)LBUFFER%$words[-1]*}
+        fi
+        w=${(M)LBUFFER%%[[:blank:]]#$w}
+        shift -p words
+      done
+    else
+      if [[ $#words -gt 0 ]]; then
+        w=${(M)LBUFFER%${words[-1]}[[:blank:]]#}
       else
-        w=${(M)LBUFFER%$words[-1]*}
+        w=$LBUFFER
       fi
-      w=${(M)LBUFFER%%[[:blank:]]#$w}
-      shift -p words
-    done
+    fi
     move=-$#w
   else
     # We can't split $RBUFFER on words, because that usually doesn't parse correctly.
@@ -40,14 +51,19 @@ if [[ $WIDGET == *-shell-word ]]; then
     move=+$#w
   fi
 else
-  local wordchars
+  local wordchars word
   zstyle -s ":edit:$WIDGET:" word-chars wordchars &&
       local +h WORDCHARS="$wordchars"
 
-  local word='([[:space:]]~[[:WORD:]])#([^[:WORD:][:space:]])#[[:upper:]]#([[:WORD:]]~[[:upper:]])#'
   if [[ $WIDGET == *backward-* ]]; then
+    if [[ $tradback != yes ]]; then
+      word='([[:space:]]~[[:WORD:]])#([^[:WORD:][:space:]])#[[:upper:]]#([[:WORD:]]~[[:upper:]])#'
+    else
+      word='[[:upper:]]#([[:WORD:]]~[[:upper:]])#([[:space:]]~[[:WORD:]])#([^[:WORD:][:space:]])#'
+    fi
     move=-${(M)#LBUFFER%%$~word}
   else
+    word='([[:space:]]~[[:WORD:]])#([^[:WORD:][:space:]])#[[:upper:]]#([[:WORD:]]~[[:upper:]])#'
     move=+${(M)#RBUFFER##$~word}
   fi
 fi
