@@ -35,7 +35,7 @@ local -a   alt_ctrl_delete=( '^[[3;7~' '^[^[[3;5~' )
 local widget=''
 
 for widget in {{back,for}ward,{backward-,}kill}-{sub,shell-}word; do
-  zle -N "$widget" .edit.subword
+  zle -N "$widget" .edit.move-word
 done
 
 .edit.bind() {
