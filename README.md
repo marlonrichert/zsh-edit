@@ -1,21 +1,31 @@
+
 # Zsh Edit
+
 _Zsh Edit_ is a set of handy utilities for making life easier on the Zsh command line.
 
+
 ## Requirements
+
 Tested to work with Zsh 5.8 and newer.
 
+
 ## Installating & updating
+
 I recommend using [Znap](https://github.com/marlonrichert/zsh-snap) or installing the plugin manually.  You can also
 install it using any 3rd-party framework or plugin manager you like, but I won't document that here.
 
+
 ### Using Znap
+
 Aust add this to your `.zshrc` file:
 ```zsh
 znap source marlonrichert/zsh-edit
 ```
 To update, run `znap pull`.
 
+
 ### Manually
+
 1. Clone the repo:
    ```zsh
    % git clone --depth 1 https://github.com/marlonrichert/zsh-edit.git
@@ -34,7 +44,9 @@ To update:
 % git pull
 ```
 
+
 ## `bind` Command
+
 Bind shell commands directly to keyboard shortcuts.  What's more, when using these, your current command line will be
 left intact.
 ```zsh
@@ -62,7 +74,9 @@ Look up which combination of keys could generate an escape sequence listed by `b
 "^[^[OA"   Alt-Up
 ```
 
+
 ## Key Bindings
+
 _Zsh Edit_ adds the keyboard shortcuts below to your `main` and `emacs` keymaps.
 * By default, the `emacs` keymap is your `main` keymap.
 * However, if you use `vi` mode, then your `main` keymap will be the `viins` keymap.
@@ -107,12 +121,16 @@ command](https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#Zle-Builtin
 |Backward kill line                         |<kbd>Ctrl</kbd><kbd>U</kbd>              |<kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>⌫</kbd>|<kbd>Ctrl</kbd><kbd>X</kbd> <kbd>⌫</kbd>
 |Forward kill line                          |<kbd>Ctrl</kbd><kbd>K</kbd>              |<kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>⌦</kbd>|<kbd>Ctrl</kbd><kbd>X</kbd> <kbd>⌦</kbd>
 
+
 ## Replace All Occurences of a Character
+
 Press <kbd>Ctrl</kbd><kbd>]</kbd> followed by two characters and all occurences of the first character will be replaced
 with the second character. This is useful, for example, if you pasted a list of files separated by line breaks into the
 command line, but you need them to be separated with spaces instead.
 
+
 ## Clipboard Viewer
+
 Whenever you use <kbd>yank</kbd> (`^Y` in `emacs`), <kbd>vi-put-after</kbd> (`p` in `vicmd`) or <kbd>vi-put-after</kbd>
 (`P` in `vicmd`) to paste a kill into the command line, _Zsh Edit_ will list the contents of your kill ring (including
 the cut buffer) below your command line. In addition, _Zsh Edit_ eliminates all duplicate kills from your kill ring.
@@ -125,47 +143,62 @@ your command line – just press <kbd>yank-pop</kbd> by itself.
 Finally, _Zsh Edit_ adds a new widget <kbd>reverse-yank-pop</kbd>, which lets you cycle in the opposite direction. It is
 bound to `^[Y` in the `emacs` keymap.
 
+
 ## Subword Movement
+
 Zsh's widgets <kbd>forward-word</kbd>, <kbd>backward-word</kbd>, <kbd>kill-word</kbd> and <kbd>backward-kill-word</kbd>
 fail to stop on many of the positions that we humans see as word boundaries:
+
 ```zsh
 # Zsh with default WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' moves/deletes way too much:
+#              >       >             >             >          >
 % ENV_VAR=value command --option-flag camelCaseWord ~/dir/*.ext
-#               <       <             <             <
+# <             <       <             <             <
 
-# Zsh with  WORDCHARS='' is bit better, but skips punctuation clusters & doesn't find SubWords:
+# Zsh with  WORDCHARS='' is bit better, but skips punctuation clusters & doesn't find subWords:
+#    >   >     >         >      >    >               >     >
 % ENV_VAR=value command --option-flag camelCaseWord ~/dir/*.ext
-#     <   <     <         <      <    <               <     <
+# <   <   <     <         <      <    <               <     <
 ```
 
-_Zsh Edit_ adds new widgets with better parsing rules that can find all the word boundaries that matter to us as humans:
+_Zsh Edit_ adds new widgets with better parsing rules that can find all the word boundaries that matter to us as humans.
+Additionally, it adds smarter movement: If the cursor is inside a word, it will move to the beginning or end of that
+same word, not the next one.  This way, you can quickly toggle between the beginning and the end of each word.
+
+For example:
 
 ```zsh
-# Zsh Edit with WORDCHARS='':
-% ENV_VAR=value command --option-flag camelCaseWord ~/dir/*.ext
-#    <   <     <       <        <    <     <   <   <     <
+# Zsh Edit with WORDCHARS=''
+#   >   >     >       >  >     >    >     >   >   >  >  >      >
+% ENV_VAR=value command --option-flag camelCaseWord ~/dir/?*.ext
+# <   <   <     <       < <      <    <    <   <    < <      <
 ```
-Note how, with Zsh Edit, the cursor always lands at the end of each subword.  Compare this to the vanilla Zsh example
-above and you'll see that this leads to movement with fewer surprises.  Additionally, this puts the cursor in the most
-optimal spot to start typing or invoke tab completion.
 
 To stop a character from being treated as a subword separator, simply add it to `$WORDCHARS`.  For example, by treating
-`~` and `*` as word characters, you can get more precise subword movement in file strings:
+`~`, `*` and `?` as word characters, you can get more precise subword movement in path strings:
 
 ```zsh
-# Zsh Edit with WORDCHARS='~*':
-% ENV_VAR=value command --option-flag camelCaseWord ~/dir/*.ext
-#    <   <     <       <        <    <     <   <   < <   < <
+# Zsh Edit with WORDCHARS='~*?'
+#  > >   >  >   >
+% cd ~/dir/?*.ext
+# <  < <   <  <
 ```
 
 If you don't want to change your `$WORDCHARS` globally, you can instead use the following:
+
 ```zsh
-zstyle ':edit:*' word-chars '~*'
+zstyle ':edit:*' word-chars '~*?'
 ```
+
 This will change `$WORDCHARS` only for the widgets provided by Zsh Edit.
 
+
 ## Author
+
 © 2020-2023 [Marlon Richert](https://github.com/marlonrichert)
 
+
+
 ## License
+
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

@@ -1,8 +1,7 @@
 #!/bin/zsh
 zmodload zsh/complist
 
-emulate -L zsh
-setopt $_edit_opts
+emulate -L zsh; setopt $_edit_opts
 
 
 local -a          left=(  '^['{\[,O}D )
@@ -50,15 +49,15 @@ done
 bindkey "$backspace"  backward-delete-char
 bindkey "$delete"     delete-char
 .edit.bind backward-subword         '^[^B'  "$ctrl_left[@]"   "$alt_ctrl_left[@]"
-.edit.bind forward-subword          '^[^F'  "$ctrl_right[@]"  "$alt_ctrl_right[@]"
+.edit.bind  forward-subword         '^[^F'  "$ctrl_right[@]"  "$alt_ctrl_right[@]"
 .edit.bind backward-shell-word      '^[b'   "$alt_left[@]"    "$shift_left[@]"
-.edit.bind forward-shell-word       '^[f'   "$alt_right[@]"   "$shift_right[@]"
+.edit.bind  forward-shell-word      '^[f'   "$alt_right[@]"   "$shift_right[@]"
 .edit.bind beginning-of-line        '^A'    "$home[@]"        '^X'"$^left[@]"
 .edit.bind       end-of-line        '^E'    "$end[@]"         '^X'"$^right[@]"
 .edit.bind backward-kill-subword    '^H'    "$ctrl_backspace[@]"  "$alt_ctrl_backspace[@]"
-.edit.bind kill-subword             '^[^D'  "$ctrl_delete[@]"     "$alt_ctrl_delete[@]"
+.edit.bind          kill-subword    '^[^D'  "$ctrl_delete[@]"     "$alt_ctrl_delete[@]"
 .edit.bind backward-kill-shell-word '^W'    "$alt_backspace[@]"   "$shift_backspace[@]"
-.edit.bind kill-shell-word          '^[d'   "$alt_delete[@]"      "$shift_backspace[@]"
+.edit.bind          kill-shell-word '^[d'   "$alt_delete[@]"      "$shift_backspace[@]"
 .edit.bind backward-kill-line       '^U'    "$shift_ctrl_backspace[@]"  '^X'"$backspace"
 .edit.bind          kill-line       '^K'    "$shift_ctrl_delete[@]"     '^X'"$delete"
 

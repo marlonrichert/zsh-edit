@@ -1,6 +1,5 @@
 #!/bin/zsh
 emulate -L zsh; setopt $_edit_opts
-local -i move=0
 
 if [[ $WIDGET == *kill-* ]]; then
   zle -f kill
@@ -10,47 +9,71 @@ if [[ $WIDGET == *kill-* ]]; then
   fi
 fi
 
-if [[ $WIDGET == *-shell-word ]]; then
-  local w=
-  if [[ $WIDGET == *backward* ]]; then
-    local -a words=( ${(z)LBUFFER} )
-    while [[ -z $w && $#words[@] -gt 0 ]]; do
-      if [[ $words[-1] == \; ]]; then
-        w=${(M)LBUFFER%[$';\n']*}
-      else
-        w=${(M)LBUFFER%$words[-1]*}
-      fi
-      w=${(M)LBUFFER%%[[:blank:]]#$w}
-      shift -p words
-    done
-    move=-$#w
-  else
-    # We can't split $RBUFFER on words, because that usually doesn't parse correctly.
-    local -a words=( ${(z)BUFFER} ) lwords=( ${(z)LBUFFER} )
-    words=( $words[$#lwords[@],-1] )
-    words[1]=${words[1]#$lwords[-1]}
-    while [[ -z $w && $#words[@] -gt 0 ]]; do
-      if [[ $words[1] == \; ]]; then
-        w=${(M)RBUFFER#*[$';\n']}
-      else
-        w=${(M)RBUFFER#*$words[1]}
-      fi
-      shift words
-    done
-    move=+$#w
-  fi
-else
-  local wordchars
-  zstyle -s ":edit:$WIDGET:" word-chars wordchars &&
-      local +h WORDCHARS="$wordchars"
+local catch=
 
-  local word='([[:space:]]~[[:WORD:]])#([^[:WORD:][:space:]])#[[:upper:]]#([[:WORD:]]~[[:upper:]])#'
+if [[ $WIDGET == *-shell-* ]]; then
+
+  # We can't split $RBUFFER on words, because that often won't parse correctly.
+  local -a  words=( ${(z)BUFFER} )
+  local -a lwords=( ${(z)LBUFFER} )
+
+  local -i lcurrent=$#lwords
+  local -i rcurrent=$#lwords
+
+  local prefix=$lwords[lcurrent]
+  local suffix=${words[rcurrent]#$prefix}
+
+  if [[ -z $suffix ]]; then
+    # The cursor is inbetween two words, not in the middle of a word.
+    (( rcurrent++ ))
+    suffix=$words[rcurrent]
+  fi
+
+  local blanks='[[:blank:]]#'
+  local terminator=$'[;\n]' # Parsed word ; can also be \n
+
   if [[ $WIDGET == *backward-* ]]; then
-    move=-${(M)#LBUFFER%%$~word}
-  else
-    move=+${(M)#RBUFFER##$~word}
+    if [[ lcurrent -ne rcurrent && $prefix == \; ]]; then
+      prefix=
+    else
+      terminator=
+    fi
+    catch=${(M)LBUFFER%%${prefix}${~terminator}${~blanks}}
+
+  else  # forward
+    if [[ lcurrent -ne rcurrent && $suffix == \; ]]; then
+      suffix=
+    else
+      terminator=
+    fi
+    catch=${(M)RBUFFER##${~blanks}${~terminator}${suffix}}
+  fi
+
+else  # subword
+  local wordchars=
+  zstyle -s ":edit:$WIDGET:" word-chars wordchars &&
+      local +h WORDCHARS=$wordchars
+
+  local subword='([[:WORD:]]#~*[[:lower:]]*[[:upper:]]*)'
+  local blanks='[[:blank:]]##'
+  local other='[^[:WORD:][:blank:]]##'
+
+  if [[ $WIDGET == *backward-* ]]; then
+    catch=${(M)LBUFFER%%(${~other}${~blanks}|${~subword}(${~blanks}|${~other}|))}
+
+  else  # forward
+    catch=${(M)RBUFFER##(${~blanks}${~other}|(${~blanks}|${~other}|)${~subword})}
   fi
 fi
+
+local -i move= mult=
+
+if [[ $WIDGET == *backward-* ]]; then
+  (( mult = -1 ))
+else
+  (( mult = +1 ))
+fi
+(( move = mult * $#catch ))
 
 if [[ $WIDGET == *kill-* ]]; then
   # Move the mark instead of the cursor, or else kill-region will add the kill to the wrong end of the cutbuffer.
