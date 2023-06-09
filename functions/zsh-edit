@@ -86,9 +86,14 @@ ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS+=(
 zle -N find-replace-char .edit.find-replace
 bindkey -M emacs '^]' find-replace-char
 
-for widget in yank yank-pop reverse-yank-pop vi-put-before vi-put-after; do
+[[ -v ZSH_AUTOSUGGEST_IGNORE_WIDGETS ]] ||
+    typeset -gHa ZSH_AUTOSUGGEST_IGNORE_WIDGETS=()
+
+for widget in yank {,reverse-}yank-pop vi-put-{before,after}; do
   zle -N $widget .edit.visual-yank
+  ZSH_AUTOSUGGEST_IGNORE_WIDGETS+=( $widget )
 done
+
 bindkey -M emacs  '^[/' redo \
                   '^[Y' reverse-yank-pop
 

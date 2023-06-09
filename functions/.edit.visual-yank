@@ -42,6 +42,9 @@ zle -C _show_clipboard list-choices _edit._show_clipboard
     ;;
   esac
 
+  [[ -v functions[_zsh_autosuggest_clear] ]] &&
+      _zsh_autosuggest_clear
+
   local -i len=$#killring[@]
   {
     .edit.visual-yank.filter-duplicates "$@"
