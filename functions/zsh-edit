@@ -2,7 +2,7 @@
 zmodload zsh/complist
 
 emulate -L zsh; setopt $_edit_opts
-
+autoload -Uz add-zsh-hook
 
 local -a          left=(  '^['{\[,O}D )
 local -a    shift_left=(  '^['{'[1;',\[,O}2D )
@@ -86,13 +86,24 @@ ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS+=(
 zle -N find-replace-char .edit.find-replace
 bindkey -M emacs '^]' find-replace-char
 
-[[ -v ZSH_AUTOSUGGEST_IGNORE_WIDGETS ]] ||
-    typeset -gHa ZSH_AUTOSUGGEST_IGNORE_WIDGETS=()
 
-for widget in yank {,reverse-}yank-pop vi-put-{before,after}; do
-  zle -N $widget .edit.visual-yank
-  ZSH_AUTOSUGGEST_IGNORE_WIDGETS+=( $widget )
-done
+add-zsh-hook precmd zsh-edit-precmd
+
+# Make sure we always run before Autosuggest, so we don't overwrite its default ignore list.
+typeset -gaU precmd_functions=( zsh-edit-precmd $precmd_functions )
+
+zsh-edit-precmd() {
+  add-zsh-hook -d precmd zsh-edit-precmd
+  unfunction zsh-edit-precmd
+
+  local -a yank_widgets=( yank {,reverse-}yank-pop vi-put-{before,after} )
+  for widget in $yank_widgets; do
+    zle -N $widget .edit.visual-yank
+  done
+  [[ -v ZSH_AUTOSUGGEST_IGNORE_WIDGETS ]] &&
+      ZSH_AUTOSUGGEST_IGNORE_WIDGETS+=( $yank_widgets )
+}
+
 
 bindkey -M emacs  '^[/' redo \
                   '^[Y' reverse-yank-pop
