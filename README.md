@@ -124,9 +124,14 @@ command](https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#Zle-Builtin
 
 ## Replace All Occurences of a Character
 
-Press <kbd>Ctrl</kbd><kbd>]</kbd> followed by two characters and all occurences of the first character will be replaced
-with the second character. This is useful, for example, if you pasted a list of files separated by line breaks into the
-command line, but you need them to be separated with spaces instead.
+Press <kbd>Ctrl</kbd><kbd>]</kbd> followed by two characters and each substring consisting of one or
+more occurences of the first character will be replaced entirely with the second character.  This is
+useful, for example, if you pasted a list of files separated by line breaks into the command line,
+but you need them to be separated with spaces instead.
+
+If you've just pasted something or the region is active, only the pasted or selected text is
+affected.  This way, you can find-and-replace selectively.  Otherwise, this widget always operates
+on the whole command line.
 
 
 ## Clipboard Viewer

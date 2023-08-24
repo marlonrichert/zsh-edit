@@ -1,8 +1,22 @@
 #!/bin/zsh
+
 local find replace
 read -k find
 read -k replace
 find=${find:/$'\r'/$'\n'}
 replace=${replace:/$'\r'/$'\n'}
-LBUFFER=${LBUFFER//$find/$replace}
-RBUFFER=${RBUFFER//$find/$replace}
+
+if (( YANK_ACTIVE )); then
+  (( MARK = YANK_START ))
+  (( CURSOR = YANK_END ))
+  (( REGION_ACTIVE = 1 ))
+fi
+
+if (( REGION_ACTIVE )); then
+  zle .copy-region-as-kill
+  CUTBUFFER=${CUTBUFFER//${find}##/$replace}
+  zle .put-replace-selection
+else
+  LBUFFER=${LBUFFER//${find}##/$replace}
+  RBUFFER=${RBUFFER//${find}##/$replace}
+fi
