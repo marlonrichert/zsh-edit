@@ -17,7 +17,7 @@ install it using any 3rd-party framework or plugin manager you like, but I won't
 
 ### Using Znap
 
-Aust add this to your `.zshrc` file:
+Just add this to your `.zshrc` file:
 ```zsh
 znap source marlonrichert/zsh-edit
 ```
