@@ -32,13 +32,13 @@ elif [[ -v opts[-n] ]]; then
       [[ -n $name && $name != *- ]] &&
           name+=' + '
       case $code in
-        ( (#b)($'\e'[\[O]([ABCDFH]))* )
+        ( (#b)($'\e'[\[O]([ABCDFHZ]))* )
           case $match[2] in
             ( A ) name+='Up' ;;
             ( B ) name+='Down' ;;
             ( C ) name+='Right' ;;
             ( D ) name+='Left' ;;
-            ( E ) name+='End' ;;
+            ( F ) name+='End' ;;
             ( H ) name+='Home' ;;
             ( Z ) name+='Shift-Tab' ;;
           esac
