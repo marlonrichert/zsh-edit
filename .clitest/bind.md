@@ -258,6 +258,21 @@
 "^X}"       Control-X + }
 "^X~"       Control-X + ~
 "^X^?"      Control-X + Backspace
+% COLUMNS=40 key= bind -n '^['{\[,O}{{A..D},F,H,Z}
+"^[[A"      Up
+"^[[B"      Down
+"^[[C"      Right
+"^[[D"      Left
+"^[[F"      End
+"^[[H"      Home
+"^[[Z"      Shift-Tab
+"^[OA"      Up
+"^[OB"      Down
+"^[OC"      Right
+"^[OD"      Left
+"^[OF"      End
+"^[OH"      Home
+"^[OZ"      Shift-Tab
 % COLUMNS=40 key= bind -n '^[[1;'{2..16}{A,B,C,D,F,H}
 "^[[1;2A"    Shift-Up
 "^[[1;2B"    Shift-Down
