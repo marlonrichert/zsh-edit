@@ -43,14 +43,15 @@ elif [[ -v opts[-n] ]]; then
             ( Z ) name+='Shift-Tab' ;;
           esac
         ;;
-        ( (#b)($'\e['([356])\~)* )
+        ( (#b)($'\e['([2356])\~)* )
           case $match[2] in
+            ( 2 ) name+='Insert' ;;
             ( 3 ) name+='Delete' ;;
             ( 5 ) name+='PageUp' ;;
             ( 6 ) name+='PageDown' ;;
           esac
         ;;
-        ( (#b)($'\e'(O|\[|\[[1356]\;|\[27\;)(|<2-16>)([ABCDFH~]|\;8~))* )
+        ( (#b)($'\e'(O|\[|\[[12356]\;|\[27\;)(|<2-16>)([ABCDFH~]|\;8~))* )
           case $match[3] in
             (  2 ) name+='Shift' ;;
             (  3 ) name+='Alt' ;;
@@ -79,6 +80,7 @@ elif [[ -v opts[-n] ]]; then
             ( \;8~  ) name+='Backspace' ;;
             ( \~    )
               case $match[2] in
+                ( '[2;' ) name+='Insert'    ;;
                 ( '[3;' ) name+='Delete'    ;;
                 ( '[5;' ) name+='PageUp'    ;;
                 ( '[6;' ) name+='PageDown'  ;;
