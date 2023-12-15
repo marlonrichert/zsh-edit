@@ -259,20 +259,20 @@
 "^X~"       Control-X + ~
 "^X^?"      Control-X + Backspace
 % COLUMNS=40 key= bind -n '^['{\[,O}{{A..D},F,H,Z}
-"^[[A"      Up
-"^[[B"      Down
-"^[[C"      Right
-"^[[D"      Left
-"^[[F"      End
-"^[[H"      Home
-"^[[Z"      Shift-Tab
-"^[OA"      Up
-"^[OB"      Down
-"^[OC"      Right
-"^[OD"      Left
-"^[OF"      End
-"^[OH"      Home
-"^[OZ"      Shift-Tab
+"^[[A"   Up
+"^[[B"   Down
+"^[[C"   Right
+"^[[D"   Left
+"^[[F"   End
+"^[[H"   Home
+"^[[Z"   Shift-Tab
+"^[OA"   Up
+"^[OB"   Down
+"^[OC"   Right
+"^[OD"   Left
+"^[OF"   End
+"^[OH"   Home
+"^[OZ"   Shift-Tab
 % COLUMNS=40 key= bind -n '^[[1;'{2..16}{A,B,C,D,F,H}
 "^[[1;2A"    Shift-Up
 "^[[1;2B"    Shift-Down
@@ -364,7 +364,37 @@
 "^[[1;16D"   Ctrl-Meta-Alt-Shift-Left
 "^[[1;16F"   Ctrl-Meta-Alt-Shift-End
 "^[[1;16H"   Ctrl-Meta-Alt-Shift-Home
-% COLUMNS=40 key= bind -n '^[['{5,6}\;{2..16}\~
+% COLUMNS=40 key= bind -n '^[['{2,3,5,6}\;{2..16}\~
+"^[[2;2~"    Shift-Insert
+"^[[2;3~"    Alt-Insert
+"^[[2;4~"    Alt-Shift-Insert
+"^[[2;5~"    Ctrl-Insert
+"^[[2;6~"    Ctrl-Shift-Insert
+"^[[2;7~"    Ctrl-Alt-Insert
+"^[[2;8~"    Shift-Backspace
+"^[[2;9~"    Meta-Insert
+"^[[2;10~"   Meta-Shift-Insert
+"^[[2;11~"   Meta-Alt-Insert
+"^[[2;12~"   Meta-Alt-Shift-Insert
+"^[[2;13~"   Ctrl-Meta-Insert
+"^[[2;14~"   Ctrl-Meta-Shift-Insert
+"^[[2;15~"   Ctrl-Meta-Alt-Insert
+"^[[2;16~"   Ctrl-Meta-Alt-Shift-Insert
+"^[[3;2~"    Shift-Delete
+"^[[3;3~"    Alt-Delete
+"^[[3;4~"    Alt-Shift-Delete
+"^[[3;5~"    Ctrl-Delete
+"^[[3;6~"    Ctrl-Shift-Delete
+"^[[3;7~"    Ctrl-Alt-Delete
+"^[[3;8~"    Alt-Backspace
+"^[[3;9~"    Meta-Delete
+"^[[3;10~"   Meta-Shift-Delete
+"^[[3;11~"   Meta-Alt-Delete
+"^[[3;12~"   Meta-Alt-Shift-Delete
+"^[[3;13~"   Ctrl-Meta-Delete
+"^[[3;14~"   Ctrl-Meta-Shift-Delete
+"^[[3;15~"   Ctrl-Meta-Alt-Delete
+"^[[3;16~"   Ctrl-Meta-Alt-Shift-Delete
 "^[[5;2~"    Shift-PageUp
 "^[[5;3~"    Alt-PageUp
 "^[[5;4~"    Alt-Shift-PageUp
