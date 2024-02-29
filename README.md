@@ -200,8 +200,7 @@ This will change `$WORDCHARS` only for the widgets provided by Zsh Edit.
 
 ## Author
 
-© 2020-2023 [Marlon Richert](https://github.com/marlonrichert)
-
+© 2020-2025 [Marlon Richert](https://github.com/marlonrichert)
 
 
 ## License
