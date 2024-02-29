@@ -1,0 +1,12 @@
+#!/bin/zsh
+zstyle ':autocomplete:recover-line:*' ignore yes
+
+$0() {
+  if [[ $ZLE_LINE_ABORTED == [[:blank:]]# ]]; then
+    zle -M 'last aborted line is blank'
+    return 1
+  fi
+  LBUFFER+=$ZLE_LINE_ABORTED
+}
+
+"$0" "$@"
