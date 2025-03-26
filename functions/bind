@@ -118,18 +118,25 @@ elif [[ -v opts[-n] ]]; then
 
 elif [[ -v opts[-u] ]]; then
   local -a val=() keys=(
-    \  {a..z} \; \' \, \. \/ \[ \] \\ \` {1..9}                      0 \- \= $'\C-?'
-    $'\e'{O,\[}{A,B,C,D,F,H} $'\e['{2,3,5,6}\~
-       {A..Z} \: \" \< \> \? \{ \} \| \~ \! \@ \# \$ \% \^ \& \* \( \) \_ \+ $'\e[Z'
+    \  {a..z} \; \' \, \. \/ \[ \] \\ \` {1..9}                      0 \- \= '^?'
+    '^['{O,\[}{A,B,C,D,F,H} '^[['{2,3,5,6}\~
+       {A..Z} \: \" \< \> \? \{ \} \| \~ \! \@ \# \$ \% \^ \& \* \( \) \_ \+ '^[[Z'
     {$'\C-@'..$'\C-_'}
   )
+  keys+=( '^['$^keys )
+
   local k
-  for k in $keys $'\e'$^keys; do
-    [[ $( bindkey $mopt[@] $@ - $k )$( bindkey $mopt[@] $@ -p - $k ) == *'undefined-key' ]] &&
-        val+=( ${${${${${(q+)k}//'\C-'/^}//'\\'/\\}#(|\$)[\']}%[\']} )
+  for k in "$keys[@]"; do
+    if [[
+        -z $( bindkey $mopt[@] $@ -p - $k ) &&
+        $( bindkey $mopt[@] $@ - $k ) == (#b)(*)' undefined-key'
+    ]]; then
+      val+=( "${(Q)match[1]}" )
+    fi
   done
-  (( $#val )) &&
-      print -cr - ${(q-)val}
+  if (( $#val )); then
+    bind -n "$val[@]"
+  fi
 
 else
   # Start each widget name with `.` to make autosuggestions & syntax highlighting ignore them.
