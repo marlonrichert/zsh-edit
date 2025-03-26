@@ -136,17 +136,12 @@ on the whole command line.
 
 ## Clipboard Viewer
 
-Whenever you use <kbd>yank</kbd> (`^Y` in `emacs`), <kbd>vi-put-after</kbd> (`p` in `vicmd`) or <kbd>vi-put-after</kbd>
-(`P` in `vicmd`) to paste a kill into the command line, _Zsh Edit_ will list the contents of your kill ring (including
-the cut buffer) below your command line. In addition, _Zsh Edit_ eliminates all duplicate kills from your kill ring.
-Thus, each entry listed is guaranteed to be unique.
+Whenever you use <kbd>yank</kbd> (`^Y` in `emacs`), <kbd>vi-put-after</kbd> (`p` in `vicmd`) or
+<kbd>vi-put-after</kbd> (`P` in `vicmd`) to paste a kill into the command line, _Zsh Edit_ will list
+the contents of your kill ring (including the cut buffer) below your command line.
 
-Furthermore, after pasting, when you use <kbd>yank-pop</kbd> (`^[y` in `emacs`), _Zsh Edit_ will show you which kill is
-currently selected, making it easier to cycle to the right one. To view your clipboard at any time – without modifying
-your command line – just press <kbd>yank-pop</kbd> by itself.
-
-Finally, _Zsh Edit_ adds a new widget <kbd>reverse-yank-pop</kbd>, which lets you cycle in the opposite direction. It is
-bound to `^[Y` in the `emacs` keymap.
+Additionally, _Zsh Edit_ adds a new widget <kbd>reverse-yank-pop</kbd>, which lets you cycle in the
+opposite direction.  It is bound to `^[Y` in the `emacs` keymap.
 
 
 ## Subword Movement

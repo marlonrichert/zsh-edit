@@ -1,57 +1,24 @@
 #!/bin/zsh
-zle -C _show_clipboard list-choices _edit._show_clipboard
 
-.edit.visual-yank.filter-duplicates() {
-  emulate -L zsh; setopt $_edit_opts
+if [[ $WIDGET == *-after ]]; then
+  zle -f yank
+else
+  zle -f yankbefore
+fi
 
-  local -aU kills=( $CUTBUFFER $killring[@] )
+typeset -U killring=( "$killring[@]" )
 
-  (( $#kills[@] )) ||
-      return
+if [[ $WIDGET == *reverse-yank-pop* ]]; then
+  local nonzero=( $CUTBUFFER $killring )
+  repeat $(( $#nonzero - 1 )); do
+    zle .yank-pop
+  done
+else
+  zle .$WIDGET
+fi
 
-  shift kills
-  killring=( ${(@)kills[@]:#} )
-
-  if [[ $WIDGET == reverse-* ]]; then
-    local widget=.${WIDGET#reverse-}
-    local -i i
-    for (( i = 0; i < $#killring[@]; i++ )); do
-      zle $widget
-    done
-  else
-    zle .$WIDGET
-  fi
-
-  typeset -g ZLS_COLORS="=${(zj: :)${(b)BUFFER[YANK_START+1,YANK_END]}//=/\=}=07"
-}
-
-.edit.visual-yank.restore-killring-size() {
-  emulate -L zsh; setopt $_edit_opts
-
-  (( len > $#killring[@] )) &&
-      killring+=( "${(s:.:@)${(r:$((len - $#killring[@] - 1))::.:):-}}" )
-}
-
-.edit.visual-yank() {
-  case $WIDGET in
-    ( *-before )
-      zle -f yankbefore
-    ;;
-    ( * )
-      zle -f yank
-    ;;
-  esac
-
-  [[ -v functions[_zsh_autosuggest_clear] ]] &&
-      _zsh_autosuggest_clear
-
-  local -i len=$#killring[@]
-  {
-    .edit.visual-yank.filter-duplicates "$@"
-    zle _show_clipboard
-  } always {
-    .edit.visual-yank.restore-killring-size "$@"
-  }
-}
-
-.edit.visual-yank "$@"
+local clipboard=( $CUTBUFFER $killring )
+local out
+print -cv out "$clipboard[@]"
+zle -M "$out"
+return 0
