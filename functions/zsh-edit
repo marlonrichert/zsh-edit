@@ -88,6 +88,15 @@ zle -N find-replace-char .edit.find-replace
 bindkey -M emacs '^]' find-replace-char
 
 
+typeset -ga _edit_yank_widgets=( yank {,reverse-}yank-pop vi-put-{before,after} )
+for widget in $_edit_yank_widgets; do
+  zle -N "$widget" .edit.visual-yank
+  zstyle ":autocomplete:${widget}:*" ignore yes
+done
+bindkey -M emacs '^[/' redo \
+                 '^[Y' reverse-yank-pop
+
+# Make sure yank widgets are ignored by Autosuggest.
 add-zsh-hook precmd zsh-edit-precmd
 
 # Make sure we always run before Autosuggest, so we don't overwrite its default ignore list.
@@ -97,12 +106,9 @@ zsh-edit-precmd() {
   add-zsh-hook -d precmd zsh-edit-precmd
   unfunction zsh-edit-precmd
 
-  local -a yank_widgets=( yank {,reverse-}yank-pop vi-put-{before,after} )
-  for widget in $yank_widgets; do
-    zle -N $widget .edit.visual-yank
-  done
   [[ -v ZSH_AUTOSUGGEST_IGNORE_WIDGETS ]] &&
-      ZSH_AUTOSUGGEST_IGNORE_WIDGETS+=( $yank_widgets )
+      ZSH_AUTOSUGGEST_IGNORE_WIDGETS+=( $_edit_yank_widgets )
+  unset _edit_yank_widgets
 }
 
 
