@@ -1,7 +1,10 @@
 #!/bin/zsh -f
-cd ${0:A:h}
-env -i HOME=$( mktemp -d ) PATH=$PATH FPATH=$FPATH /bin/zsh -f -- \
-    clitest/clitest  --list-run --progress dot --prompt '%' \
-        --pre-flight 'git --version; print $PWD $VENDOR $OSTYPE =zsh $ZSH_VERSION $ZSH_PATCHLEVEL' \
-        --diff-options -b \
-        -- $PWD/.clitest/*.md
+cd $( git rev-parse --show-toplevel )
+
+git --version
+print =zsh
+typeset -p1 VENDOR OSTYPE ZSH_VERSION ZSH_PATCHLEVEL
+
+env -i HOME=$( mktemp -d ) PATH=$PATH FPATH=$FPATH zsh -f -- \
+    clitest/clitest --list-run --progress dot --prompt '%' --color always \
+        -- $PWD/Tests/*.md
